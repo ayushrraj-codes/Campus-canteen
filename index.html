@@ -1,0 +1,1607 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="theme-color" content="#f7f8f2">
+	<meta name="description" content="Government Engineering College Khagaria campus canteen. Order lunch ahead and pick it up when it suits you.">
+	<meta name="api-base-url" content="http://127.0.0.1:8000">
+	<meta name="google-client-id" content="">
+	<title>Government Engineering College Khagaria | Campus Canteen</title>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+	<style>
+		:root {
+			color-scheme: light;
+			--paper: #f7f8f2;
+			--white: #fff;
+			--ink: #202b22;
+			--muted: #737b70;
+			--line: #e4e7de;
+			--green: #b8e66d;
+			--green-dark: #38623d;
+			--red: #ec6548;
+			--blue: #bddde8;
+			--sans: 'DM Sans', sans-serif;
+			--display: 'Space Grotesk', sans-serif;
+			--radius: 5px;
+		}
+
+		*, *::before, *::after { box-sizing: border-box; }
+		html { scroll-behavior: smooth; }
+		body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(--sans); font-size: 14px; -webkit-font-smoothing: antialiased; }
+		button, input, select { font: inherit; }
+		button { color: inherit; }
+		a { color: inherit; text-decoration: none; }
+		button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible { outline: 3px solid #417c45; outline-offset: 3px; }
+		.wrap { width: min(1240px, calc(100% - 64px)); margin-inline: auto; }
+
+		.announcement { background: var(--ink); color: #f8f9f4; text-align: center; padding: 9px 16px; font-size: 11px; letter-spacing: .15px; }
+		.announcement strong { color: var(--green); font-weight: 700; }
+		.topbar { min-height: 70px; border-bottom: 1px solid var(--line); display: flex; align-items: center; }
+		.topbar-inner { display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+		.brand { display: inline-flex; align-items: center; gap: 10px; font-family: var(--display); font-weight: 700; font-size: 18px; letter-spacing: -.5px; }
+		.brand-mark { width: 32px; height: 32px; display: grid; place-items: center; background: var(--green); border-radius: 50%; color: var(--ink); font-size: 18px; }
+		.nav { display: flex; align-items: center; gap: 30px; color: #576054; font-size: 13px; }
+		.nav a:hover { color: var(--ink); }
+		.header-right { display: flex; align-items: center; gap: 17px; }
+		.open-label { display: flex; align-items: center; gap: 7px; color: #4d5a4b; font-size: 12px; }
+		.open-dot { width: 7px; height: 7px; border-radius: 50%; background: #5d9e55; box-shadow: 0 0 0 3px #5d9e5522; }
+		.header-basket { border: 1px solid var(--line); background: var(--white); padding: 9px 13px; border-radius: var(--radius); font-size: 12px; font-weight: 700; cursor: pointer; transition: border-color .2s, transform .2s; }
+		.header-basket:hover { border-color: var(--ink); transform: translateY(-1px); }
+
+		.hero { padding: 46px 0 37px; display: grid; grid-template-columns: 1.2fr .8fr; align-items: end; gap: 40px; }
+		.eyebrow { display: flex; align-items: center; gap: 8px; margin: 0 0 14px; color: var(--green-dark); font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; }
+		.eyebrow::before { content: ''; width: 18px; height: 2px; background: var(--red); }
+		h1, h2, h3, p { margin-top: 0; }
+		h1 { max-width: 670px; margin-bottom: 13px; font-family: var(--display); font-size: clamp(46px, 6vw, 76px); font-weight: 600; line-height: .98; letter-spacing: -3.2px; }
+		h1 span { color: var(--green-dark); }
+		.hero-copy { max-width: 435px; margin: 0; color: var(--muted); font-size: 14px; line-height: 1.7; }
+		.hero-note { justify-self: end; width: min(100%, 328px); background: var(--green); padding: 17px 19px; display: flex; align-items: center; gap: 13px; border-radius: var(--radius); }
+		.note-icon { width: 38px; height: 38px; flex: 0 0 auto; display: grid; place-items: center; border-radius: 50%; background: #ffffff84; font-size: 18px; }
+		.hero-note strong { display: block; font-family: var(--display); font-size: 14px; }
+		.hero-note small { display: block; margin-top: 3px; color: #455942; font-size: 11px; }
+
+		.order-strip { min-height: 49px; display: flex; align-items: center; justify-content: space-between; gap: 18px; padding: 0 0 15px; border-bottom: 1px solid var(--line); color: var(--muted); font-size: 11px; }
+		.order-strip-left { display: flex; align-items: center; gap: 21px; }
+		.strip-item { display: flex; align-items: center; gap: 7px; white-space: nowrap; }
+		.strip-item strong { color: var(--ink); font-weight: 600; }
+		.strip-icon { color: var(--green-dark); font-size: 14px; }
+		.menu-heading { padding: 29px 0 18px; display: flex; align-items: end; justify-content: space-between; gap: 20px; }
+		.menu-heading h2 { margin: 0; font-family: var(--display); font-size: 27px; font-weight: 600; letter-spacing: -.8px; }
+		.menu-heading p { margin: 4px 0 0; color: var(--muted); font-size: 12px; }
+		.search { position: relative; width: min(245px, 38vw); }
+		.search span { position: absolute; left: 12px; top: 50%; color: #747c70; transform: translateY(-50%); font-size: 16px; }
+		.search input { width: 100%; height: 38px; padding: 0 12px 0 36px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--white); color: var(--ink); font-size: 12px; }
+		.search input::placeholder { color: #8b9187; }
+
+		.content { display: grid; grid-template-columns: minmax(0, 1fr) 300px; align-items: start; gap: 30px; padding: 0 0 74px; }
+		.menu-area { min-width: 0; }
+		.filters { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; margin: 0 0 19px; }
+		.filter { min-height: 32px; padding: 0 13px; border: 1px solid var(--line); border-radius: 30px; background: transparent; color: #657062; font-size: 11px; cursor: pointer; transition: color .18s, background .18s, border-color .18s; }
+		.filter:hover { border-color: #87917d; color: var(--ink); }
+		.filter.active { border-color: var(--ink); background: var(--ink); color: var(--white); }
+		.menu-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 17px; }
+		.food-card { min-width: 0; overflow: hidden; border: 1px solid var(--line); border-radius: var(--radius); background: var(--white); transition: transform .2s, box-shadow .2s; animation: enter .34s both; }
+		.food-card:hover { transform: translateY(-3px); box-shadow: 0 9px 22px #26352210; }
+		.food-photo { position: relative; aspect-ratio: 1.42; overflow: hidden; background: #e4e8df; }
+		.food-photo img { width: 100%; height: 100%; display: block; object-fit: cover; transition: transform .35s; }
+		.food-card:hover .food-photo img { transform: scale(1.045); }
+		.food-tag { position: absolute; left: 9px; top: 9px; padding: 5px 8px; border-radius: 3px; background: #fffef4ed; color: #414b3c; font-size: 9px; font-weight: 700; }
+		.food-body { padding: 12px 12px 11px; }
+		.food-title-row { min-height: 21px; display: flex; align-items: start; justify-content: space-between; gap: 7px; }
+		.food-title-row h3 { margin: 0; font-family: var(--display); font-size: 14px; font-weight: 600; line-height: 1.25; }
+		.food-price { flex-shrink: 0; font-size: 13px; font-weight: 700; }
+		.food-description { min-height: 31px; margin: 6px 0 10px; color: var(--muted); font-size: 10px; line-height: 1.5; }
+		.food-footer { display: flex; align-items: center; justify-content: space-between; gap: 6px; }
+		.food-meta { color: #737b70; font-size: 10px; }
+		.add-btn { width: 31px; height: 31px; display: grid; flex: 0 0 auto; place-items: center; border: 0; border-radius: 50%; background: var(--green); font-size: 21px; line-height: 1; cursor: pointer; transition: background .18s, transform .18s; }
+		.add-btn:hover { background: #a5dc4d; transform: scale(1.08); }
+		.empty-results { grid-column: 1 / -1; padding: 36px 18px; border: 1px dashed #c9cec3; border-radius: var(--radius); color: var(--muted); text-align: center; }
+
+		.basket { position: sticky; top: 20px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--white); }
+		.basket-head { padding: 17px 17px 13px; border-bottom: 1px solid var(--line); display: flex; align-items: center; justify-content: space-between; }
+		.basket-head h2 { margin: 0; font-family: var(--display); font-size: 17px; font-weight: 600; }
+		.basket-count { min-width: 23px; height: 23px; display: grid; place-items: center; border-radius: 50%; background: var(--green); font-size: 10px; font-weight: 700; }
+		.basket-items { max-height: 218px; overflow-y: auto; padding: 2px 17px; }
+		.empty-basket { padding: 19px 2px; color: var(--muted); font-size: 12px; line-height: 1.6; }
+		.basket-line { display: grid; grid-template-columns: 1fr auto; gap: 6px; padding: 12px 0; border-bottom: 1px solid #eff0eb; }
+		.basket-line-name { font-size: 11px; font-weight: 600; }
+		.basket-line-price { font-size: 11px; font-weight: 600; }
+		.basket-line-controls { display: flex; align-items: center; gap: 9px; grid-column: 1 / -1; }
+		.qty-btn { width: 22px; height: 22px; display: grid; place-items: center; border: 1px solid var(--line); border-radius: 50%; background: var(--white); font-size: 13px; cursor: pointer; }
+		.qty-btn:hover { border-color: var(--ink); }
+		.qty-value { min-width: 10px; text-align: center; font-size: 11px; }
+		.line-remove { margin-left: auto; border: 0; background: none; color: #8b5e51; font-size: 10px; cursor: pointer; }
+		.basket-form { padding: 14px 17px 16px; border-top: 1px solid var(--line); }
+		.field-label { display: block; margin: 0 0 7px; font-size: 10px; font-weight: 700; }
+		.pickup-select { width: 100%; height: 37px; margin-bottom: 14px; padding: 0 10px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--white); color: var(--ink); font-size: 11px; }
+		.payment-method { margin: 0 0 13px; padding: 0; border: 0; }
+		.payment-method legend { margin-bottom: 7px; font-size: 10px; font-weight: 700; }
+		.payment-options { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; }
+		.payment-option { min-height: 43px; display: flex; align-items: center; gap: 8px; padding: 7px 9px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--white); cursor: pointer; }
+		.payment-option:has(input:checked) { border-color: var(--green-dark); background: #f1f6e8; }
+		.payment-option input { margin: 0; accent-color: var(--green-dark); }
+		.payment-option span { min-width: 0; }
+		.payment-option strong, .payment-option small { display: block; }
+		.payment-option strong { font-size: 10px; }
+		.payment-option small { margin-top: 2px; color: var(--muted); font-size: 8px; }
+		.total-row { display: flex; align-items: center; justify-content: space-between; padding: 11px 0 14px; border-top: 1px solid var(--line); font-size: 12px; }
+		.total-row strong { font-family: var(--display); font-size: 17px; }
+		.checkout-btn { width: 100%; min-height: 43px; display: flex; align-items: center; justify-content: center; gap: 8px; border: 0; border-radius: var(--radius); background: var(--ink); color: var(--white); font-size: 12px; font-weight: 700; cursor: pointer; transition: background .2s, transform .2s; }
+		.checkout-btn:hover:not(:disabled) { background: var(--green-dark); transform: translateY(-1px); }
+		.checkout-btn:disabled { background: #d2d6cd; color: #747a71; cursor: not-allowed; }
+		.pickup-note { margin: 10px 0 0; color: var(--muted); font-size: 10px; text-align: center; }
+		.footer { padding: 22px 0; border-top: 1px solid var(--line); color: var(--muted); font-size: 10px; }
+		.footer-inner { display: flex; justify-content: space-between; gap: 16px; }
+		.footer strong { color: var(--ink); }
+
+		dialog { width: min(420px, calc(100% - 32px)); padding: 0; border: 1px solid var(--line); border-radius: 7px; background: var(--paper); color: var(--ink); box-shadow: 0 20px 70px #17211930; }
+		dialog::backdrop { background: #16201988; backdrop-filter: blur(3px); }
+		.dialog-content { padding: 30px; text-align: center; }
+		.dialog-mark { width: 52px; height: 52px; display: grid; place-items: center; margin: 0 auto 16px; border-radius: 50%; background: var(--green); font-size: 25px; }
+		.dialog-content h2 { margin-bottom: 8px; font-family: var(--display); font-size: 25px; letter-spacing: -.8px; }
+		.dialog-content p { color: var(--muted); font-size: 12px; line-height: 1.65; }
+		.order-ticket { margin: 17px 0; padding: 13px; border: 1px dashed #aab29f; border-radius: var(--radius); font-size: 12px; line-height: 1.8; }
+		.order-ticket strong { font-family: var(--display); font-size: 20px; }
+		.dialog-close { width: 100%; min-height: 42px; border: 0; border-radius: var(--radius); background: var(--ink); color: var(--white); font-weight: 700; cursor: pointer; }
+		.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+		[hidden] { display: none !important; }
+		.auth-screen { min-height: 100vh; display: grid; grid-template-columns: minmax(350px, .82fr) 1.18fr; }
+		.auth-screen { position: fixed; z-index: 100; inset: 0; overflow-y: auto; background: var(--paper); }
+		.auth-panel { display: flex; flex-direction: column; justify-content: center; width: min(100%, 480px); margin-inline: auto; padding: 46px 48px; }
+		.auth-topline { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 54px; }
+		.auth-panel .brand { margin-bottom: 0; }
+		.auth-back { padding: 7px 0; border: 0; background: none; color: var(--muted); font-size: 11px; cursor: pointer; }
+		.auth-back:hover { color: var(--ink); }
+		.auth-eyebrow { margin: 0 0 12px; color: var(--green-dark); font-size: 10px; font-weight: 700; letter-spacing: 1.4px; text-transform: uppercase; }
+		.auth-panel h1 { margin: 0 0 10px; font-size: 39px; letter-spacing: -1.7px; line-height: 1.06; }
+		.auth-intro { margin: 0 0 26px; color: var(--muted); font-size: 13px; line-height: 1.6; }
+		.auth-tabs { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; margin-bottom: 22px; padding: 4px; border: 1px solid var(--line); border-radius: var(--radius); background: #eff1e9; }
+		.auth-tab { min-height: 36px; border: 0; border-radius: 3px; background: transparent; color: var(--muted); font-size: 12px; font-weight: 600; cursor: pointer; }
+		.auth-tab[aria-selected="true"] { background: var(--white); color: var(--ink); box-shadow: 0 1px 3px #202b2215; }
+		.auth-form { display: grid; gap: 14px; }
+		.auth-field { display: grid; gap: 6px; }
+		.auth-field label { font-size: 11px; font-weight: 700; }
+		.auth-field input, .auth-field select { width: 100%; height: 43px; padding: 0 12px; border: 1px solid #dce1d6; border-radius: var(--radius); background: var(--white); color: var(--ink); font-size: 12px; }
+		.auth-submit { width: 100%; min-height: 45px; margin-top: 4px; border: 0; border-radius: var(--radius); background: var(--ink); color: var(--white); font-size: 12px; font-weight: 700; cursor: pointer; }
+		.auth-submit:hover { background: var(--green-dark); }
+		.auth-message { min-height: 17px; margin: 1px 0 0; color: #a14132; font-size: 11px; line-height: 1.5; }
+		.auth-demo-note { margin: 17px 0 0; color: #757d71; font-size: 10px; line-height: 1.6; }
+		.google-auth { margin-top: 15px; }
+		.google-auth-divider { display: flex; align-items: center; gap: 10px; margin-bottom: 13px; color: var(--muted); font-size: 10px; }
+		.google-auth-divider::before, .google-auth-divider::after { height: 1px; flex: 1; background: var(--line); content: ''; }
+		.google-signin-button { min-height: 42px; display: grid; place-items: center; }
+		.auth-google-fallback { width: 100%; min-height: 42px; border: 1px solid #dce1d6; border-radius: var(--radius); background: #fff; color: var(--ink); font-size: 12px; font-weight: 600; cursor: pointer; }
+		.google-auth-message { min-height: 16px; margin: 7px 0 0; color: var(--muted); font-size: 10px; line-height: 1.5; }
+		.auth-visual { position: relative; min-height: 100vh; overflow: hidden; background: #486142; }
+		.auth-visual img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+		.auth-visual::after { position: absolute; inset: 0; background: linear-gradient(0deg, #17231bd9 0%, #17231b16 68%); content: ''; }
+		.auth-visual-copy { position: absolute; z-index: 1; right: 0; bottom: 0; left: 0; padding: 50px clamp(28px, 6vw, 82px); color: var(--white); }
+		.auth-visual-copy p { max-width: 510px; margin: 0 0 9px; font-family: var(--display); font-size: clamp(28px, 4vw, 48px); font-weight: 600; line-height: 1.08; }
+		.auth-visual-copy span { font-size: 12px; color: #f5f8efcc; }
+		.student-dashboard { min-height: 100vh; }
+		.dashboard-ribbon { background: #eaf1df; border-bottom: 1px solid #dce6d0; }
+		.dashboard-ribbon-inner { min-height: 46px; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+		.dashboard-label { color: var(--green-dark); font-size: 10px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; }
+		.dashboard-user { display: flex; align-items: center; gap: 14px; font-size: 11px; }
+		.dashboard-user strong { font-weight: 700; }
+		.text-button { border: 0; background: none; color: #53614f; font-size: 11px; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+		.student-overview { padding: 28px 0 20px; }
+		.student-overview-head { display: flex; align-items: end; justify-content: space-between; gap: 18px; }
+		.student-overview h1 { margin: 0 0 4px; font-size: 27px; letter-spacing: -.8px; }
+		.student-overview p { margin: 0; color: var(--muted); font-size: 12px; }
+		.student-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; margin-top: 19px; border: 1px solid var(--line); background: var(--line); }
+		.student-stat { min-height: 67px; padding: 12px 15px; background: var(--white); }
+		.student-stat span { display: block; color: var(--muted); font-size: 10px; }
+		.student-stat strong { display: block; margin-top: 5px; font-family: var(--display); font-size: 17px; font-weight: 600; }
+		.student-orders { margin: 0 0 24px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--white); }
+		.student-orders-head { min-height: 44px; display: flex; align-items: center; justify-content: space-between; padding: 0 14px; border-bottom: 1px solid var(--line); }
+		.student-orders-head h2 { margin: 0; font-family: var(--display); font-size: 13px; font-weight: 600; }
+		.student-order-list { padding: 0 14px; }
+		.student-order-row { min-height: 44px; display: grid; grid-template-columns: 1fr auto auto; align-items: center; gap: 14px; border-bottom: 1px solid #eff0eb; font-size: 11px; }
+		.student-order-row:last-child { border-bottom: 0; }
+		.student-order-main strong { display: block; font-weight: 600; }
+		.student-order-main small { display: block; margin-top: 3px; color: var(--muted); font-size: 10px; }
+		.student-live-order { margin-top: 15px; margin-bottom: 17px; padding: 16px 18px; border: 1px solid #dbe4d2; border-left: 4px solid var(--green-dark); background: #fff; }
+		.live-order-head, .live-order-footer { display: flex; align-items: center; justify-content: space-between; gap: 14px; }
+		.live-order-kicker { margin: 0 0 3px; color: var(--green-dark); font-size: 9px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; }
+		.live-order-head h2 { margin: 0; font-family: var(--display); font-size: 18px; font-weight: 600; }
+		.live-order-badge { padding: 6px 9px; border-radius: 20px; background: #fff1d8; color: #825b17; font-size: 10px; font-weight: 700; white-space: nowrap; }
+		.live-order-badge[data-status="Cooking"] { background: #e1eef7; color: #285d83; }
+		.live-order-badge[data-status="Ready"] { background: #e3f2d4; color: #38623d; }
+		.live-order-badge[data-status="Collected"] { background: #e9ece8; color: #697167; }
+		.order-progress { display: grid; grid-template-columns: 1fr auto 1fr auto 1fr; align-items: center; gap: 7px; max-width: 620px; margin: 17px 0; }
+		.order-progress-step { min-width: 0; display: flex; align-items: center; justify-content: center; gap: 6px; color: #8a9185; font-size: 10px; font-weight: 600; text-align: center; }
+		.order-progress-step.is-current, .order-progress-step.is-complete { color: var(--ink); }
+		.order-step-dot { width: 23px; height: 23px; flex: 0 0 auto; display: grid; place-items: center; border-radius: 50%; background: #eceee9; font-size: 11px; }
+		.order-progress-step.is-current .order-step-dot { outline: 2px solid #a5cf77; outline-offset: 2px; }
+		.order-progress-arrow { color: #a5ad9f; font-size: 13px; }
+		.live-order-footer { padding-top: 12px; border-top: 1px solid #edf0e8; }
+		.live-order-token { font-family: var(--display); font-size: 13px; font-weight: 700; }
+		.live-order-token strong { color: var(--green-dark); font-size: 19px; }
+		.live-order-instruction { margin: 0; color: var(--muted); font-size: 10px; text-align: right; }
+		.student-wait-predictor { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 15px 24px; margin-top: 0; margin-bottom: 18px; padding: 15px 18px; border: 1px solid #dce4d5; background: #f0f4e9; }
+		.wait-predictor-title { display: flex; align-items: center; gap: 10px; }
+		.wait-predictor-icon { width: 34px; height: 34px; flex: 0 0 auto; display: grid; place-items: center; border-radius: 50%; background: #fff; font-size: 17px; }
+		.wait-predictor-title h2 { margin: 0; font-family: var(--display); font-size: 15px; font-weight: 600; }
+		.wait-predictor-title p { margin: 3px 0 0; color: var(--muted); font-size: 9px; }
+		.wait-crowd-badge { padding: 6px 9px; border-radius: 20px; background: #e3f2d4; color: #38623d; font-size: 9px; font-weight: 700; white-space: nowrap; }
+		.wait-crowd-badge[data-level="Moderate"] { background: #fff1d8; color: #825b17; }
+		.wait-crowd-badge[data-level="High"] { background: #f8e4df; color: #a34234; }
+		.wait-predictor-body { grid-column: 1 / -1; display: grid; grid-template-columns: minmax(170px, .8fr) 2fr; align-items: center; gap: 16px; padding-top: 12px; border-top: 1px solid #dce4d5; }
+		.wait-eta-label { display: block; color: #596550; font-size: 10px; }
+		.wait-eta-value { display: block; margin-top: 3px; color: var(--green-dark); font-family: var(--display); font-size: 25px; font-weight: 700; }
+		.wait-predictor-stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
+		.wait-predictor-stat { min-width: 0; }
+		.wait-predictor-stat span { display: block; color: var(--muted); font-size: 9px; line-height: 1.4; }
+		.wait-predictor-stat strong { display: block; margin-top: 4px; font-family: var(--display); font-size: 15px; font-weight: 600; }
+		.customer-nav { display: flex; align-items: center; gap: 5px; border-bottom: 1px solid var(--line); background: var(--white); }
+		.customer-tab { min-height: 43px; padding: 0 14px; border: 0; border-bottom: 2px solid transparent; background: transparent; color: #626a5e; font-size: 11px; font-weight: 600; cursor: pointer; }
+		.customer-tab:hover { color: var(--ink); }
+		.customer-tab[aria-selected="true"] { border-bottom-color: var(--green-dark); color: var(--ink); }
+		.customer-account { min-height: 55vh; padding: 35px 0 70px; }
+		.customer-account-inner { width: min(920px, calc(100% - 64px)); margin-inline: auto; }
+		.account-page-head { display: flex; align-items: end; justify-content: space-between; gap: 18px; margin-bottom: 21px; padding-bottom: 17px; border-bottom: 1px solid var(--line); }
+		.account-page-head h1 { margin: 0; font-family: var(--display); font-size: 30px; font-weight: 600; letter-spacing: 0; }
+		.account-page-head p { margin: 0 0 6px; color: var(--green-dark); font-size: 9px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; }
+		.account-summary { color: var(--muted); font-size: 11px; }
+		.customer-account .student-order-list { padding: 0; border: 1px solid var(--line); border-radius: var(--radius); background: var(--white); }
+		.customer-account .student-order-row { min-height: 62px; padding: 10px 14px; }
+		.payment-summary { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1px; margin-bottom: 18px; border: 1px solid var(--line); background: var(--line); }
+		.payment-summary-item { min-height: 70px; padding: 13px 15px; background: var(--white); }
+		.payment-summary-item span { color: var(--muted); font-size: 10px; }
+		.payment-summary-item strong { display: block; margin-top: 5px; font-family: var(--display); font-size: 19px; font-weight: 600; }
+		.payment-list { display: grid; border: 1px solid var(--line); border-radius: var(--radius); background: var(--white); }
+		.payment-row { display: grid; grid-template-columns: minmax(130px, 1fr) minmax(180px, 1.4fr) minmax(120px, .8fr) auto; align-items: center; gap: 15px; min-height: 66px; padding: 11px 14px; border-bottom: 1px solid #eff0eb; }
+		.payment-row:last-child { border-bottom: 0; }
+		.payment-order strong, .payment-transaction strong { display: block; font-size: 11px; font-weight: 700; }
+		.payment-order small, .payment-transaction small { display: block; margin-top: 4px; color: var(--muted); font-size: 9px; }
+		.payment-transaction strong { font-family: var(--display); }
+		.payment-amount { font-family: var(--display); font-size: 14px; font-weight: 700; }
+		.payment-status { padding: 5px 8px; border-radius: 20px; background: #e3f2d4; color: #38623d; font-size: 9px; font-weight: 700; }
+		.payment-empty { padding: 25px 17px; color: var(--muted); font-size: 12px; }
+		.upi-qr { width: 220px; height: 220px; display: block; margin: 12px auto; border: 1px solid var(--line); background: #fff; image-rendering: pixelated; }
+		.upi-details { display: grid; gap: 4px; margin: 11px 0 16px; color: var(--muted); font-size: 11px; }
+		.upi-details strong { color: var(--ink); }
+		.upi-open-app { min-height: 42px; display: flex; align-items: center; justify-content: center; margin: 0 0 14px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--white); color: var(--ink); font-size: 11px; font-weight: 700; }
+		.upi-reference-form { display: grid; gap: 8px; text-align: left; }
+		.upi-reference-form label { font-size: 10px; font-weight: 700; }
+		.upi-reference-form input { width: 100%; height: 41px; padding: 0 10px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--white); }
+		.upi-reference-form button { min-height: 42px; border: 0; border-radius: var(--radius); background: var(--ink); color: white; font-size: 11px; font-weight: 700; cursor: pointer; }
+		.upi-reference-form button:disabled { opacity: .6; cursor: wait; }
+		.upi-dialog-feedback { min-height: 17px; margin: 5px 0; color: #a14132; font-size: 10px; line-height: 1.5; }
+		.upi-dialog-close { margin-top: 6px; border: 0; background: transparent; color: var(--muted); font-size: 11px; text-decoration: underline; cursor: pointer; }
+		.profile-layout { display: grid; grid-template-columns: 230px minmax(0, 1fr); align-items: start; gap: 34px; }
+		.profile-photo-panel { display: grid; justify-items: start; gap: 12px; }
+		.profile-photo-frame { width: 128px; aspect-ratio: 1; position: relative; display: grid; place-items: center; overflow: hidden; border: 1px solid var(--line); border-radius: 50%; background: #e8eee1; color: var(--green-dark); font-family: var(--display); font-size: 34px; font-weight: 600; }
+		.profile-photo-frame img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+		.profile-photo-frame img[hidden] { display: none; }
+		.profile-photo-control { min-height: 36px; padding: 0 12px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--white); font-size: 11px; font-weight: 600; cursor: pointer; }
+		.profile-photo-control:hover { border-color: var(--ink); }
+		.profile-photo-hint, .profile-feedback { min-height: 16px; margin: 0; color: var(--muted); font-size: 10px; line-height: 1.5; }
+		.profile-form { display: grid; gap: 15px; max-width: 480px; }
+		.profile-field { display: grid; gap: 6px; }
+		.profile-field label { font-size: 11px; font-weight: 700; }
+		.profile-field input { width: 100%; height: 42px; padding: 0 12px; border: 1px solid #dce1d6; border-radius: var(--radius); background: var(--white); color: var(--ink); font-size: 12px; }
+		.profile-field input[readonly] { background: #eff1e9; color: var(--muted); }
+		.profile-save { width: max-content; min-height: 40px; padding: 0 15px; border: 0; border-radius: var(--radius); background: var(--ink); color: #fff; font-size: 11px; font-weight: 700; cursor: pointer; }
+		.profile-save:hover { background: var(--green-dark); }
+		.status-chip { width: max-content; padding: 5px 8px; border-radius: 20px; background: #edf1e7; color: #486243; font-size: 9px; font-weight: 700; }
+		.status-chip[data-status="New"] { background: #fff1d8; color: #825b17; }
+		.status-chip[data-status="Cooking"] { background: #e1eef7; color: #285d83; }
+		.status-chip[data-status="Ready"] { background: #e3f2d4; color: #38623d; }
+		.status-chip[data-status="Preparing"] { background: #fff1d8; color: #8b6020; }
+		.status-chip[data-status="Collected"] { background: #e9ece8; color: #697167; }
+		.status-chip[data-status="AwaitingPayment"] { background: #fff1d8; color: #825b17; }
+		.retry-payment-button { margin-top: 5px; padding: 0; border: 0; background: transparent; color: var(--green-dark); font-size: 10px; font-weight: 700; text-decoration: underline; text-underline-offset: 2px; cursor: pointer; }
+		.orders-empty { margin: 0; padding: 16px 0; color: var(--muted); font-size: 11px; }
+		.admin-dashboard { min-height: 100vh; }
+		.admin-topbar { min-height: 67px; display: flex; align-items: center; border-bottom: 1px solid var(--line); background: var(--white); }
+		.admin-topbar-inner { display: flex; align-items: center; justify-content: space-between; gap: 18px; }
+		.admin-brand { display: flex; align-items: center; gap: 10px; font-family: var(--display); font-weight: 700; font-size: 16px; }
+		.admin-workspace { padding: 36px 0 70px; }
+		.admin-page-head { display: flex; align-items: end; justify-content: space-between; gap: 20px; padding-bottom: 23px; border-bottom: 1px solid var(--line); }
+		.admin-page-head h1 { margin: 0 0 6px; font-size: 34px; letter-spacing: -1.4px; }
+		.admin-page-head p { margin: 0; color: var(--muted); font-size: 12px; }
+		.admin-kpis { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; margin: 22px 0 28px; border: 1px solid var(--line); background: var(--line); }
+		.admin-kpi { min-height: 83px; padding: 15px 18px; background: var(--white); }
+		.admin-kpi span { color: var(--muted); font-size: 10px; }
+		.admin-kpi strong { display: block; margin-top: 7px; font-family: var(--display); font-size: 23px; font-weight: 600; }
+		.admin-queue-head { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 13px; }
+		.admin-queue-head h2 { margin: 0; font-family: var(--display); font-size: 18px; font-weight: 600; }
+		.admin-queue-head p { margin: 4px 0 0; color: var(--muted); font-size: 11px; }
+		.admin-filter { min-height: 33px; padding: 0 11px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--white); color: var(--ink); font-size: 11px; }
+		.admin-order-list { display: grid; gap: 8px; }
+		.admin-order { display: grid; grid-template-columns: 82px minmax(140px, 1fr) minmax(160px, 1.35fr) minmax(120px, 1fr) 145px; align-items: center; gap: 16px; min-height: 72px; padding: 12px 14px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--white); }
+		.admin-order-id { font-family: var(--display); font-size: 12px; font-weight: 700; }
+		.admin-order-customer { margin-top: 4px; color: var(--muted); font-size: 10px; }
+		.admin-order-items { color: #414b3e; font-size: 11px; line-height: 1.5; }
+		.admin-order-time { color: var(--muted); font-size: 10px; }
+		.admin-order-action { min-height: 34px; padding: 0 10px; border: 0; border-radius: var(--radius); background: var(--ink); color: var(--white); font-size: 10px; font-weight: 700; cursor: pointer; }
+		.admin-order-action:hover { background: var(--green-dark); }
+		.admin-order-done { justify-self: end; }
+		.admin-order-columns { display: grid; grid-template-columns: 82px minmax(140px, 1fr) minmax(160px, 1.35fr) minmax(120px, 1fr) 145px; gap: 16px; padding: 0 14px 8px; color: var(--muted); font-size: 9px; font-weight: 700; letter-spacing: .7px; text-transform: uppercase; }
+		.admin-order-token { display: flex; align-items: center; gap: 5px; font-family: var(--display); font-size: 12px; font-weight: 700; }
+		.admin-order-student strong { display: block; font-size: 11px; font-weight: 600; }
+		.admin-order-student small { display: block; margin-top: 3px; color: var(--muted); font-size: 9px; }
+		.admin-order-status { display: grid; justify-items: start; gap: 5px; }
+		.admin-order-status small { color: var(--muted); font-size: 9px; }
+		.admin-order-action-cell { display: flex; justify-content: flex-end; }
+		.admin-demo-tag { padding: 3px 5px; border-radius: 2px; background: #eff1e9; color: #6b7465; font-family: var(--sans); font-size: 8px; font-weight: 700; }
+		.stock-control { margin-top: 30px; padding-top: 22px; border-top: 1px solid var(--line); }
+		.stock-control h2 { margin: 0; font-family: var(--display); font-size: 18px; font-weight: 600; }
+		.stock-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; margin-top: 13px; }
+		.stock-row { min-height: 73px; display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 5px 10px; padding: 12px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--white); cursor: pointer; }
+		.stock-name { font-size: 11px; font-weight: 700; }
+		.stock-state { color: #38623d; font-size: 9px; font-weight: 700; }
+		.stock-state.out { color: #a34234; }
+		.stock-row input { grid-column: 2; grid-row: 1 / span 2; width: 18px; height: 18px; margin: 0; accent-color: var(--green-dark); cursor: pointer; }
+		.stock-updated { min-height: 15px; margin: 8px 0 0; color: var(--green-dark); font-size: 10px; }
+		.basket-stock-warning { margin: 8px 0 0; color: #a34234; font-size: 10px; }
+		.basket-error { margin: 8px 0 0; color: #a34234; font-size: 10px; line-height: 1.5; }
+		.add-btn:disabled, .combo-add:disabled { background: #e0e3dc; color: #787f73; cursor: not-allowed; transform: none; }
+		.admin-empty { padding: 38px 20px; border: 1px dashed #c9cec3; border-radius: var(--radius); color: var(--muted); text-align: center; }
+		.admin-empty strong { display: block; margin-bottom: 5px; color: var(--ink); font-family: var(--display); font-size: 16px; }
+		.landing-home { width: 100%; }
+		.landing-home > section { scroll-margin-top: 22px; }
+		.landing-hero { min-height: 470px; overflow: hidden; background: #293b2d; color: #fff; }
+		.landing-hero-inner { min-height: 470px; display: grid; grid-template-columns: 1fr 1fr; align-items: center; gap: 42px; padding-block: 38px; }
+		.landing-hero-copy { max-width: 570px; }
+		.landing-hero .eyebrow { color: #c5e89a; }
+		.landing-hero h1 { max-width: 590px; margin-bottom: 17px; color: #fff; font-size: clamp(46px, 6vw, 72px); letter-spacing: 0; line-height: 1.02; }
+		.landing-hero h1 span { color: #c5e89a; }
+		.landing-hero-copy > p:not(.eyebrow) { max-width: 420px; margin-bottom: 25px; color: #ecf0e8; font-size: 14px; line-height: 1.7; }
+		.hero-actions { display: flex; flex-wrap: wrap; gap: 10px; }
+		.hero-action { min-height: 44px; display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 0 16px; border: 1px solid transparent; border-radius: var(--radius); background: var(--green); color: var(--ink); font-size: 12px; font-weight: 700; transition: transform .2s, background .2s; }
+		.hero-action:hover { transform: translateY(-2px); background: #c9f28a; }
+		.hero-action.secondary { border-color: #ffffff70; background: transparent; color: #fff; }
+		.hero-action.secondary:hover { background: #ffffff15; }
+		.landing-hero-image { width: 100%; height: 370px; display: block; object-fit: cover; }
+		.landing-section { padding: 68px 0; }
+		.section-header { display: flex; align-items: end; justify-content: space-between; gap: 22px; margin-bottom: 25px; }
+		.section-header h2 { margin: 0; font-family: var(--display); font-size: clamp(25px, 3vw, 34px); font-weight: 600; letter-spacing: 0; line-height: 1.1; }
+		.section-header p { margin: 7px 0 0; color: var(--muted); font-size: 12px; line-height: 1.6; }
+		.section-kicker { margin: 0 0 9px; color: var(--green-dark); font-size: 10px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; }
+		.combo-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 17px; }
+		.combo-card { overflow: hidden; border: 1px solid var(--line); border-radius: var(--radius); background: var(--white); }
+		.combo-image { position: relative; aspect-ratio: 1.6; overflow: hidden; background: #e4e8df; }
+		.combo-image img { width: 100%; height: 100%; display: block; object-fit: cover; transition: transform .35s; }
+		.combo-card:hover .combo-image img { transform: scale(1.04); }
+		.combo-badge { position: absolute; top: 11px; left: 11px; padding: 6px 9px; border-radius: 3px; background: var(--green); color: var(--ink); font-size: 9px; font-weight: 700; }
+		.combo-body { padding: 15px; }
+		.combo-title-row { display: flex; align-items: start; justify-content: space-between; gap: 10px; }
+		.combo-title-row h3 { margin: 0; font-family: var(--display); font-size: 16px; font-weight: 600; line-height: 1.3; }
+		.combo-price { flex: 0 0 auto; font-size: 14px; font-weight: 700; }
+		.combo-description { min-height: 35px; margin: 7px 0 14px; color: var(--muted); font-size: 11px; line-height: 1.55; }
+		.combo-add { width: 100%; min-height: 39px; display: flex; align-items: center; justify-content: space-between; padding: 0 12px; border: 0; border-radius: var(--radius); background: var(--ink); color: #fff; font-size: 11px; font-weight: 700; cursor: pointer; }
+		.combo-add:hover { background: var(--green-dark); }
+		.categories-section { background: #eef1e8; }
+		.categories-section .section-header { align-items: center; }
+		.category-tools { display: flex; align-items: center; justify-content: space-between; gap: 14px; margin-bottom: 19px; }
+		.category-tools .filters { margin: 0; }
+		.content { grid-template-columns: minmax(0, 1fr) 300px; gap: 22px; padding: 0; }
+		.menu-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+		.customer-order-history { margin: 4px 17px 16px; padding-top: 10px; border-top: 1px solid var(--line); }
+		.customer-order-history summary { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 6px 0; font-size: 11px; font-weight: 700; cursor: pointer; }
+		.customer-order-history summary span { color: var(--muted); font-size: 9px; font-weight: 500; }
+		.customer-order-history .student-order-list { max-height: 190px; overflow-y: auto; padding: 5px 0; }
+		.customer-order-history .student-order-row { grid-template-columns: 1fr auto; gap: 5px 8px; padding: 9px 0; font-size: 10px; }
+		.customer-order-history .student-order-row > small { grid-column: 1; color: var(--muted); }
+		.customer-order-history .status-chip { grid-column: 2; grid-row: 1 / span 2; }
+		.how-section { background: #dfeccf; }
+		.steps-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0; margin-top: 29px; }
+		.step { position: relative; min-height: 142px; padding: 0 21px 0 0; }
+		.step:not(:last-child)::after { position: absolute; top: 19px; right: 17px; left: 47px; height: 1px; background: #aab99a; content: ''; }
+		.step-number { position: relative; z-index: 1; width: 39px; height: 39px; display: grid; place-items: center; margin-bottom: 16px; border-radius: 50%; background: var(--ink); color: #fff; font-family: var(--display); font-size: 13px; }
+		.step h3 { margin: 0 0 6px; font-family: var(--display); font-size: 15px; font-weight: 600; }
+		.step p { max-width: 205px; margin: 0; color: #586350; font-size: 11px; line-height: 1.6; }
+		.about-section { padding-bottom: 0; background: var(--white); }
+		.about-grid { display: grid; grid-template-columns: 1.1fr .9fr 1fr; gap: 34px; padding-bottom: 56px; }
+		.about-copy h2, .reviews h2, .contact-block h2 { margin: 0 0 11px; font-family: var(--display); font-size: 21px; font-weight: 600; line-height: 1.2; }
+		.about-copy > p:not(.section-kicker) { margin: 0; color: var(--muted); font-size: 12px; line-height: 1.75; }
+		.hygiene-points { display: grid; gap: 10px; margin-top: 19px; }
+		.hygiene-point { display: flex; align-items: start; gap: 9px; color: #465140; font-size: 11px; line-height: 1.5; }
+		.hygiene-point span { color: var(--green-dark); font-weight: 700; }
+		.review-list { display: grid; gap: 10px; }
+		.review { margin: 0; padding: 13px; border-left: 3px solid var(--green); background: #f4f6f0; }
+		.review blockquote { margin: 0 0 8px; font-family: var(--display); font-size: 12px; line-height: 1.5; }
+		.review figcaption { color: var(--muted); font-size: 9px; }
+		.contact-lines { display: grid; gap: 13px; }
+		.contact-line strong { display: block; margin-bottom: 4px; font-size: 10px; text-transform: uppercase; }
+		.contact-line span, .contact-line a { color: var(--muted); font-size: 11px; line-height: 1.55; }
+		.landing-footer { padding: 18px 0; background: var(--ink); color: #e8ede4; font-size: 10px; }
+		.landing-footer .footer-inner { align-items: center; }
+		.landing-footer strong { color: #fff; }
+		@keyframes enter { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+		@media (max-width: 980px) {
+			.content { grid-template-columns: minmax(0, 1fr) 270px; gap: 20px; }
+			.menu-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+			.hero { gap: 24px; }
+			.hero-note { width: 280px; }
+			.admin-order-columns, .admin-order { grid-template-columns: 70px minmax(110px, 1fr) minmax(130px, 1.2fr) minmax(110px, .95fr) 125px; gap: 10px; }
+			.admin-order { padding-inline: 10px; }
+			.landing-hero-inner { gap: 26px; }
+			.landing-hero h1 { font-size: 56px; }
+			.combo-grid { gap: 12px; }
+			.about-grid { grid-template-columns: 1fr 1fr; }
+			.contact-block { grid-column: 1 / -1; }
+		}
+		@media (max-width: 700px) {
+			.wrap { width: min(100% - 36px, 540px); }
+			.auth-screen { grid-template-columns: 1fr; }
+			.auth-panel { width: min(100%, 480px); min-height: 100svh; padding: 30px 28px; }
+			.auth-topline { margin-bottom: 44px; }
+			.auth-visual { display: none; }
+			.dashboard-ribbon-inner { min-height: 42px; }
+			.student-overview { padding-top: 22px; }
+			.student-stats { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+			.student-stat { padding: 10px; }
+			.student-stat strong { font-size: 15px; }
+			.student-live-order { padding: 13px; }
+			.student-wait-predictor { padding: 13px; }
+			.wait-predictor-body { grid-template-columns: 1fr; gap: 12px; }
+			.wait-predictor-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 10px; }
+			.customer-nav { overflow-x: auto; }
+			.customer-tab { flex: 0 0 auto; padding-inline: 11px; font-size: 10px; }
+			.customer-account { padding-top: 25px; }
+			.customer-account-inner { width: min(100% - 36px, 540px); }
+			.profile-layout { grid-template-columns: 1fr; gap: 22px; }
+			.profile-photo-panel { grid-template-columns: auto 1fr; align-items: center; }
+			.profile-photo-frame { grid-row: 1 / span 2; width: 92px; font-size: 27px; }
+			.account-page-head h1 { font-size: 25px; }
+			.payment-row { grid-template-columns: minmax(0, 1fr) auto; gap: 8px 12px; }
+			.payment-transaction { grid-column: 1; }
+			.payment-amount { grid-column: 2; grid-row: 1; }
+			.payment-status { grid-column: 2; grid-row: 2; justify-self: end; }
+			.live-order-head { align-items: flex-start; flex-direction: column; gap: 7px; }
+			.live-order-badge { white-space: normal; }
+			.order-progress { gap: 4px; margin: 14px 0; }
+			.order-progress-step { flex-direction: column; gap: 4px; font-size: 9px; }
+			.live-order-footer { align-items: start; flex-direction: column; gap: 7px; }
+			.live-order-instruction { text-align: left; }
+			.admin-workspace { padding-top: 27px; }
+			.admin-order-columns { display: none; }
+			.admin-order { grid-template-columns: minmax(0, 1fr) auto; align-items: start; gap: 10px 12px; }
+			.admin-order-token, .admin-order-student, .admin-order-items, .admin-order-status { grid-column: 1; display: grid; grid-template-columns: 58px minmax(0, 1fr); align-items: start; gap: 7px; }
+			.admin-order-token::before, .admin-order-student::before, .admin-order-items::before, .admin-order-status::before { color: var(--muted); font-family: var(--sans); font-size: 9px; font-weight: 700; text-transform: uppercase; }
+			.admin-order-token::before { content: 'Token'; }
+			.admin-order-student::before { content: 'Student'; }
+			.admin-order-items::before { content: 'Items'; }
+			.admin-order-status::before { content: 'Status'; }
+			.admin-order-status { justify-items: start; }
+			.admin-order-action-cell { grid-column: 2; grid-row: 1 / span 4; align-self: center; }
+			.admin-order-action-cell .admin-order-action { max-width: 125px; }
+			.stock-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+			.landing-hero, .landing-hero-inner { min-height: 0; }
+			.landing-hero-inner { grid-template-columns: 1fr; gap: 23px; padding-block: 39px 0; }
+			.landing-hero h1 { font-size: clamp(45px, 11vw, 62px); }
+			.landing-hero-image { height: auto; max-height: 280px; aspect-ratio: 1.8; }
+			.landing-section { padding: 48px 0; }
+			.combo-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+			.combo-description { min-height: 50px; }
+			.categories-section .section-header { align-items: start; }
+			.category-tools { align-items: stretch; flex-direction: column; }
+			.category-tools .search { width: 100%; }
+			.content { grid-template-columns: 1fr; gap: 20px; }
+			.steps-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 22px; }
+			.step:nth-child(2)::after { display: none; }
+			.about-grid { grid-template-columns: 1fr 1fr; gap: 27px 20px; }
+			.contact-block { grid-column: 1 / -1; }
+			.landing-footer .footer-inner { flex-direction: row; }
+			.announcement { font-size: 10px; }
+			.topbar { min-height: 60px; }
+			.brand { font-size: 16px; }
+			.brand-mark { width: 29px; height: 29px; }
+			.nav, .open-label { display: none; }
+			.header-basket { padding: 8px 10px; font-size: 11px; }
+			.hero { grid-template-columns: 1fr; gap: 19px; padding: 34px 0 25px; }
+			h1 { max-width: 480px; font-size: clamp(46px, 12vw, 65px); letter-spacing: -2.3px; }
+			.hero-copy { max-width: 400px; font-size: 13px; }
+			.hero-note { width: 100%; justify-self: stretch; padding: 12px 14px; }
+			.order-strip { align-items: flex-start; padding: 0 0 12px; }
+			.order-strip-left { flex-wrap: wrap; gap: 9px 17px; }
+			.strip-item { font-size: 10px; }
+			.strip-item:last-child { display: none; }
+			.menu-heading { align-items: end; padding-top: 23px; }
+			.menu-heading h2 { font-size: 24px; }
+			.search { width: 145px; }
+			.content { grid-template-columns: 1fr; gap: 23px; padding-bottom: 38px; }
+			.menu-grid { gap: 12px; }
+			.food-photo { aspect-ratio: 1.24; }
+			.food-body { padding: 10px; }
+			.food-title-row h3 { font-size: 12px; }
+			.food-description { font-size: 9px; }
+			.basket { position: static; }
+			.basket-items { max-height: 260px; }
+			.footer-inner { flex-direction: column; gap: 6px; }
+		}
+		@media (max-width: 390px) {
+			.wrap { width: calc(100% - 28px); }
+			.menu-grid { grid-template-columns: 1fr; }
+			.food-photo { aspect-ratio: 1.8; }
+			.food-description { min-height: 0; }
+			.search { width: 128px; }
+			.filter { padding-inline: 10px; }
+			.combo-grid { grid-template-columns: 1fr; }
+			.combo-description { min-height: 0; }
+			.about-grid { grid-template-columns: 1fr; }
+			.contact-block { grid-column: auto; }
+			.landing-footer .footer-inner { flex-direction: column; align-items: start; }
+		}
+		@media (prefers-reduced-motion: reduce) {
+			*, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+		}
+	</style>
+</head>
+<body>
+	<section class="auth-screen" id="auth-screen" aria-labelledby="auth-title" hidden>
+		<div class="auth-panel">
+			<div class="auth-topline"><a class="brand" href="#top" aria-label="Government Engineering College Khagaria Canteen"><span class="brand-mark" aria-hidden="true">✳</span> GEC Khagaria Canteen</a><button class="auth-back" id="auth-back" type="button">← Back to canteen</button></div>
+			<p class="auth-eyebrow">Government Engineering College Khagaria</p>
+			<h1 id="auth-title">Your campus lunch starts here.</h1>
+			<p class="auth-intro">Sign in to order ahead, or create an account to get started.</p>
+			<div class="auth-tabs" role="tablist" aria-label="Account access">
+				<button class="auth-tab" id="login-tab" type="button" role="tab" aria-selected="true" aria-controls="auth-form" data-mode="login">Log in</button>
+				<button class="auth-tab" id="signup-tab" type="button" role="tab" aria-selected="false" aria-controls="auth-form" data-mode="signup">Sign up</button>
+			</div>
+			<form class="auth-form" id="auth-form">
+				<div class="auth-field" id="name-field" hidden><label for="auth-name">Your name</label><input id="auth-name" name="name" type="text" autocomplete="name" maxlength="70" placeholder="e.g. Alex Morgan"></div>
+				<div class="auth-field" id="mobile-field" hidden><label for="auth-mobile">Mobile number <span>(optional)</span></label><input id="auth-mobile" name="mobile" type="tel" autocomplete="tel" maxlength="20" placeholder="+91 98765 43210"></div>
+				<div class="auth-field"><label for="auth-email">Email address</label><input id="auth-email" name="email" type="email" autocomplete="email" maxlength="160" placeholder="you@campus.edu" required></div>
+				<div class="auth-field" id="role-field" hidden><label for="auth-role">Account type</label><select id="auth-role" name="role"><option value="student">Student customer</option><option value="faculty">Faculty</option></select></div>
+				<div class="auth-field"><label for="auth-password">Password</label><input id="auth-password" name="password" type="password" autocomplete="current-password" minlength="8" required placeholder="At least 8 characters"></div>
+				<button class="auth-submit" id="auth-submit" type="submit">Log in to your account <span aria-hidden="true">→</span></button>
+				<p class="auth-message" id="auth-message" role="alert" aria-live="polite"></p>
+			</form>
+			<div class="google-auth"><div class="google-auth-divider">or</div><div class="google-signin-button" id="google-signin-button" hidden></div><button class="auth-google-fallback" id="google-fallback" type="button">Continue with Google</button><p class="google-auth-message" id="google-auth-message" role="status" aria-live="polite"></p></div>
+			<p class="auth-demo-note">For students and faculty at Government Engineering College Khagaria. Canteen staff accounts are provisioned securely by the administrator.</p>
+		</div>
+		<div class="auth-visual" aria-hidden="true">
+			<img src="https://images.unsplash.com/photo-1498837167922-ddd27525d352?auto=format&fit=crop&w=1500&q=85" alt="">
+			<div class="auth-visual-copy"><p>A little more lunch break. A little less lunch queue.</p><span>Fresh from the campus kitchen, ready when you are.</span></div>
+		</div>
+	</section>
+	<div class="student-dashboard" id="student-dashboard">
+		<div class="dashboard-ribbon"><div class="wrap dashboard-ribbon-inner"><span class="dashboard-label" id="customer-role-label">Government Engineering College Khagaria</span><span class="dashboard-user"><strong id="student-user-name" hidden></strong><button class="text-button" id="admin-home-return" type="button" hidden>Kitchen Dashboard</button><button class="text-button" id="auth-trigger" type="button">Log in / Sign up</button><button class="text-button" id="customer-logout" type="button" data-logout hidden>Log out</button></span></div></div>
+		<nav class="wrap customer-nav" id="customer-nav" role="tablist" aria-label="Student dashboard pages" hidden><button class="customer-tab" id="home-page-tab" type="button" role="tab" aria-selected="true" data-customer-page="home">Home Page</button><button class="customer-tab" id="orders-page-tab" type="button" role="tab" aria-selected="false" data-customer-page="orders">My Order History</button><button class="customer-tab" id="payments-page-tab" type="button" role="tab" aria-selected="false" data-customer-page="payments">Payment History</button><button class="customer-tab" id="profile-page-tab" type="button" role="tab" aria-selected="false" data-customer-page="profile">My Profile</button></nav>
+		<div class="wrap student-live-order" id="student-live-order" aria-live="polite" hidden>
+			<div class="live-order-head"><div><p class="live-order-kicker">Track your order</p><h2 id="live-order-title">Order #204</h2></div><span class="live-order-badge" id="live-order-status">New</span></div>
+			<div class="order-progress" id="order-progress"></div>
+			<div class="live-order-footer"><span class="live-order-token">Your Pickup Token: <strong id="live-order-token">#204</strong></span><p class="live-order-instruction" id="live-order-instruction">Please collect your order when the status becomes READY.</p></div>
+		</div>
+		<div class="wrap student-wait-predictor" id="student-wait-predictor" aria-labelledby="wait-predictor-title" aria-live="polite">
+			<div class="wait-predictor-title"><span class="wait-predictor-icon" aria-hidden="true">🤖</span><span><h2 id="wait-predictor-title">Smart Wait-Time Predictor</h2><p>Estimated from the live queue and recent preparation times.</p></span></div>
+			<span class="wait-crowd-badge" id="wait-crowd-level" data-level="Low">LOW CROWD</span>
+			<div class="wait-predictor-body"><div><span class="wait-eta-label">Estimated preparation time</span><strong class="wait-eta-value" id="wait-eta">6 min</strong></div><div class="wait-predictor-stats"><div class="wait-predictor-stat"><span>Active orders</span><strong id="wait-active-count">0</strong></div><div class="wait-predictor-stat"><span>Orders being prepared</span><strong id="wait-preparing-count">0</strong></div><div class="wait-predictor-stat"><span>Average preparation</span><strong id="wait-average-minutes">6 min</strong></div><div class="wait-predictor-stat"><span>Crowd level</span><strong id="wait-crowd-text">Low</strong></div></div></div>
+		</div>
+	<div class="announcement" id="landing-announcement"><strong>Government Engineering College Khagaria</strong> · Pre-order lunch and skip the queue.</div>
+	<header class="topbar" id="landing-header">
+		<div class="wrap topbar-inner">
+			<a class="brand" href="#top" aria-label="Government Engineering College Khagaria Canteen"><span class="brand-mark" aria-hidden="true">✳</span> GEC Khagaria Canteen</a>
+			<nav class="nav" aria-label="Main navigation"><a href="#specials">Chef combos</a><a href="#categories">Categories</a><a href="#about">About & contact</a></nav>
+			<div class="header-right"><span class="open-label"><span class="open-dot"></span> Open for lunch</span><button class="header-basket" id="basket-jump" type="button">Your basket <span id="header-count">0</span></button></div>
+		</div>
+	</header>
+
+	<main class="landing-home" id="top">
+		<section class="landing-hero" id="hero" aria-labelledby="page-title">
+			<div class="wrap landing-hero-inner">
+				<div class="landing-hero-copy">
+					<p class="eyebrow">🍔 Campus Canteen</p>
+					<h1 id="page-title">Pre-order.<br><span>Skip the Queue.<br>Pick Up.</span></h1>
+					<p>Fresh campus favourites, ready when your break begins. Order ahead, grab your token, and get back to your day.</p>
+					<div class="hero-actions"><a class="hero-action" href="#specials">Order Now <span aria-hidden="true">→</span></a><a class="hero-action secondary" href="#how-it-works">How It Works <span aria-hidden="true">↓</span></a></div>
+				</div>
+				<img class="landing-hero-image" src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=1100&q=85" alt="Fresh campus lunch bowl with colourful vegetables">
+			</div>
+		</section>
+
+		<section class="landing-section specials-section" id="specials" aria-labelledby="specials-title">
+			<div class="wrap">
+				<header class="section-header"><div><p class="section-kicker">Made fresh on campus</p><h2 id="specials-title">Chef Special Combos</h2><p>Good pairings, campus-friendly prices, ready for pickup.</p></div><a class="text-button" href="#categories">Explore the full menu ↓</a></header>
+				<div class="combo-grid" id="combo-grid"></div>
+			</div>
+		</section>
+
+		<section class="landing-section categories-section" id="categories" aria-labelledby="categories-title">
+			<div class="wrap">
+				<header class="section-header"><div><p class="section-kicker">Find your favourite</p><h2 id="categories-title">Popular on campus</h2><p>Freshly made meals, snacks, and drinks from the canteen.</p></div></header>
+				<div class="category-tools"><div><div class="filters" role="group" aria-label="Filter menu categories" id="filters"></div><div class="filters snack-cuisine-filters" id="snack-cuisine-filters" role="group" aria-label="Filter snacks by cuisine" hidden></div></div><label class="search"><span aria-hidden="true">⌕</span><span class="sr-only">Search the menu</span><input id="search-input" type="search" placeholder="Find your lunch…" autocomplete="off"></label></div>
+				<div class="content">
+					<div class="menu-area"><div class="menu-grid" id="menu-grid" aria-live="polite"></div></div>
+					<aside class="basket" id="basket" aria-labelledby="basket-title">
+						<div class="basket-head"><h2 id="basket-title">Your order</h2><span class="basket-count" id="basket-count">0</span></div>
+						<div class="basket-items" id="basket-items" aria-live="polite"></div>
+						<p class="basket-stock-warning" id="basket-stock-warning" role="status" aria-live="polite" hidden>Remove unavailable items before placing this order.</p>
+						<p class="basket-error" id="checkout-error" role="alert" hidden></p>
+						<div class="basket-form">
+							<label class="field-label" for="pickup-time">Pickup time · Main Desk</label>
+							<select class="pickup-select" id="pickup-time"><option value="11:30 AM">11:30 am</option><option value="11:45 AM">11:45 am</option><option value="12:00 PM">12:00 pm</option><option value="12:15 PM">12:15 pm</option><option value="12:30 PM">12:30 pm</option><option value="12:45 PM">12:45 pm</option><option value="1:00 PM">1:00 pm</option><option value="1:15 PM">1:15 pm</option><option value="1:30 PM">1:30 pm</option><option value="1:45 PM">1:45 pm</option><option value="2:00 PM">2:00 pm</option><option value="2:15 PM">2:15 pm</option><option value="2:30 PM">2:30 pm</option></select>
+							<fieldset class="payment-method"><legend>Payment method</legend><div class="payment-options"><label class="payment-option"><input type="radio" name="payment-method" value="cash" checked><span><strong>Cash</strong><small>Pay at pickup</small></span></label><label class="payment-option"><input type="radio" name="payment-method" value="upi"><span><strong>UPI</strong><small>Google Pay and UPI apps</small></span></label></div></fieldset>
+							<div class="total-row"><span>Total</span><strong id="basket-total">₹0</strong></div>
+							<button class="checkout-btn" id="checkout-btn" type="button" disabled>Add something to start <span aria-hidden="true">→</span></button>
+							<p class="pickup-note" id="payment-note">Cash due when you collect · Free pickup</p>
+						</div>
+					</aside>
+				</div>
+			</div>
+		</section>
+
+		<section class="landing-section how-section" id="how-it-works" aria-labelledby="how-title">
+			<div class="wrap"><p class="section-kicker">Your break, made easy</p><h2 id="how-title" class="section-header" style="margin-bottom:0"><span>How It Works</span></h2><div class="steps-grid">
+				<div class="step"><span class="step-number">01</span><h3>Browse</h3><p>Pick a campus favourite from today’s menu.</p></div>
+				<div class="step"><span class="step-number">02</span><h3>Pre-Order</h3><p>Add to your order and choose a pickup time.</p></div>
+				<div class="step"><span class="step-number">03</span><h3>Get Token</h3><p>Keep your order number ready for collection.</p></div>
+				<div class="step"><span class="step-number">04</span><h3>Pickup</h3><p>Collect at the GEC Khagaria Main Desk.</p></div>
+			</div></div>
+		</section>
+
+		<section class="landing-section about-section" id="about" aria-labelledby="about-title">
+			<div class="wrap about-grid">
+				<div class="about-copy"><p class="section-kicker">A good break starts here</p><h2 id="about-title">About Us</h2><p>The Government Engineering College Khagaria canteen brings students and faculty fresh, satisfying food with service that fits between classes.</p><div class="hygiene-points"><div class="hygiene-point"><span aria-hidden="true">✓</span><span>Fresh ingredients and clean preparation practices.</span></div><div class="hygiene-point"><span aria-hidden="true">✓</span><span>Quick pre-order pickup, without the long lunch queue.</span></div></div></div>
+				<div class="reviews"><p class="section-kicker">From the campus</p><h2>Student Testimonials</h2><div class="review-list"><figure class="review"><blockquote>“My order was ready before my next lecture. Such a useful way to spend a short break.”</blockquote><figcaption>Student review · sample</figcaption></figure><figure class="review"><blockquote>“Fresh, quick, and easy to pick up between classes.”</blockquote><figcaption>Student review · sample</figcaption></figure></div></div>
+				<div class="contact-block"><p class="section-kicker">Come by</p><h2>Contact & Timings</h2><div class="contact-lines"><div class="contact-line"><strong>Dining hall</strong><span>Government Engineering College Khagaria<br>Main Canteen Desk</span></div><div class="contact-line"><strong>Canteen timings</strong><span>Daily · 11:30 am – 2:30 pm</span></div><div class="contact-line"><strong>Contact</strong><span>Visit the canteen team at the Main Desk during service hours.</span></div></div></div>
+			</div>
+			<footer class="landing-footer"><div class="wrap footer-inner"><span><strong>Government Engineering College Khagaria</strong> · Campus Canteen</span><span>Good food. Less queue. Better breaks.</span></div></footer>
+		</section>
+	</main>
+	<main class="customer-account" id="customer-account" hidden>
+		<div class="customer-account-inner">
+							<section class="customer-account-view" id="orders-view" aria-labelledby="orders-page-title"><header class="account-page-head"><div><p>Student Dashboard</p><h1 id="orders-page-title">My Order History</h1></div><span class="account-summary" id="student-order-summary">0 orders · 0 ready</span></header><p class="basket-error" id="student-order-error" role="alert" hidden></p><div class="student-order-list" id="student-order-list"></div></section>
+			<section class="customer-account-view" id="payments-view" aria-labelledby="payments-page-title" hidden><header class="account-page-head"><div><p>Student Dashboard</p><h1 id="payments-page-title">Payment History</h1></div></header><div class="payment-summary"><div class="payment-summary-item"><span>Completed payments</span><strong id="payment-count">0</strong></div><div class="payment-summary-item"><span>Total paid</span><strong id="payment-total">₹0</strong></div></div><div class="payment-list" id="payment-history-list"></div></section>
+			<section class="customer-account-view" id="profile-view" aria-labelledby="profile-title" hidden><header class="account-page-head"><div><p>Account</p><h1 id="profile-title">My Profile</h1></div><span class="account-summary" id="profile-role"></span></header><div class="profile-layout"><div class="profile-photo-panel"><div class="profile-photo-frame"><span id="profile-initials">U</span><img id="profile-photo-preview" alt="Your profile photo" hidden></div><label class="profile-photo-control" for="profile-photo-input">Change photo</label><input id="profile-photo-input" type="file" accept="image/jpeg,image/png,image/webp" hidden><p class="profile-photo-hint" id="profile-photo-message">JPEG, PNG, or WebP · up to 10 MB</p></div><form class="profile-form" id="profile-form"><div class="profile-field"><label for="profile-name">Full name</label><input id="profile-name" name="name" type="text" autocomplete="name" minlength="2" maxlength="70" required></div><div class="profile-field"><label for="profile-email">Email address</label><input id="profile-email" name="email" type="email" readonly></div><div class="profile-field"><label for="profile-mobile">Mobile number</label><input id="profile-mobile" name="mobile" type="tel" autocomplete="tel" maxlength="20" placeholder="+91 98765 43210"></div><button class="profile-save" id="profile-save" type="submit">Save profile</button><p class="profile-feedback" id="profile-feedback" role="status" aria-live="polite"></p></form></div></section>
+		</div>
+	</main>
+
+	<dialog id="confirmation" aria-labelledby="confirmation-title">
+		<div class="dialog-content"><span class="dialog-mark" aria-hidden="true">✓</span><p class="eyebrow" id="confirm-kicker" style="justify-content:center">Order received</p><h2 id="confirmation-title">Lunch is in motion.</h2><p id="confirm-message">We’ll have your order ready at the GEC Khagaria Main Desk. Show your order number when you collect.</p><div class="order-ticket">Pickup today at <strong id="confirm-time"></strong><br>Order <strong id="confirm-number"></strong><br><span id="confirm-total"></span></div><button class="dialog-close" id="dialog-close" type="button">Back to the menu</button></div>
+	</dialog>
+	<dialog id="upi-payment-dialog" aria-labelledby="upi-payment-title"><div class="dialog-content"><p class="eyebrow" style="justify-content:center">Direct UPI payment</p><h2 id="upi-payment-title">Scan to pay</h2><p>Pay the exact amount, then enter the UPI reference from your payment app. Staff will verify it before the order enters the kitchen.</p><img class="upi-qr" id="upi-qr-image" alt="QR code for this canteen order"><div class="upi-details"><span>Pay to <strong id="upi-payee-name"></strong></span><span>UPI ID <strong id="upi-vpa"></strong></span><span>Amount <strong id="upi-amount"></strong></span><span>Order reference <strong id="upi-order-reference"></strong></span></div><a class="upi-open-app" id="upi-open-app" href="#">Open UPI app</a><form class="upi-reference-form" id="upi-reference-form"><label for="upi-reference-input">UPI transaction reference / UTR</label><input id="upi-reference-input" name="reference" type="text" minlength="8" maxlength="40" autocomplete="off" placeholder="Enter the reference from your app" required><button id="upi-reference-submit" type="submit">Submit reference for review</button></form><p class="upi-dialog-feedback" id="upi-dialog-feedback" role="alert" aria-live="polite"></p><button class="upi-dialog-close" id="upi-dialog-cancel" type="button">Cancel for now</button></div></dialog>
+	<div class="sr-only" id="announcer" role="status" aria-live="polite"></div>
+	</div>
+	<section class="admin-dashboard" id="admin-dashboard" hidden>
+		<header class="admin-topbar"><div class="wrap admin-topbar-inner"><a class="admin-brand" href="#admin"><span class="brand-mark" aria-hidden="true">✳</span> GEC Khagaria Canteen <span class="dashboard-label">/ kitchen</span></a><button class="text-button" id="admin-home-button" type="button">Home Page</button><span class="dashboard-user"><strong id="admin-user-name"></strong><button class="text-button" id="admin-profile-button" type="button">My Profile</button><button class="text-button" type="button" data-logout>Log out</button></span></div></header>
+		<main class="wrap admin-workspace" id="admin">
+			<div class="admin-page-head"><div><p class="auth-eyebrow">Today · GEC Khagaria Main Desk</p><h1>Kitchen dashboard</h1><p>Live preorder queue and pickup status.</p></div><div class="open-label"><span class="open-dot"></span> Accepting orders</div></div>
+			<section class="admin-kpis" aria-label="Order summary"><div class="admin-kpi"><span>Active orders</span><strong id="admin-active-count">0</strong></div><div class="admin-kpi"><span>Ready for pickup</span><strong id="admin-ready-count">0</strong></div><div class="admin-kpi"><span>Collected today</span><strong id="admin-collected-count">0</strong></div></section>
+			<section aria-labelledby="queue-title"><div class="admin-queue-head"><div><h2 id="queue-title">Incoming orders</h2><p>Update each order as it moves through the kitchen.</p></div><select class="admin-filter" id="admin-filter" aria-label="Filter orders"><option value="Active">Active orders</option><option value="All">All orders</option><option value="Payment review">UPI payment review</option><option value="Ready">Ready for pickup</option><option value="Collected">Collected</option></select></div><div class="admin-order-columns" role="row"><span role="columnheader">Token</span><span role="columnheader">Student</span><span role="columnheader">Items</span><span role="columnheader">Status</span><span role="columnheader">Action</span></div><div class="admin-order-list" id="admin-order-list" role="rowgroup" aria-live="polite"></div><p class="basket-error" id="admin-order-error" role="alert" hidden></p></section>
+			<section class="stock-control" aria-labelledby="stock-title"><div class="admin-queue-head"><h2 id="stock-title">Item Stock Control</h2></div><div class="stock-grid" id="stock-grid"></div><p class="stock-updated" id="stock-updated" role="status" aria-live="polite"></p></section>
+		</main>
+	</section>
+
+	<script>
+		let menu = [
+			{ id: 'grain-bowl', name: 'Green goddess bowl', category: 'Meals', price: 120, description: 'Avocado, crunchy greens, herby yoghurt, seeds.', tag: 'STUDENT FAVOURITE', meta: 'V · GF', image: 'photo-1512621776951-a57141f2eefd', alt: 'A colourful green bowl with fresh vegetables' },
+			{ id: 'chicken-wrap', name: 'Crispy chicken wrap', category: 'Meals', price: 90, description: 'Crispy chicken, slaw, pickles, smoky mayo.', tag: 'MADE TO ORDER', meta: 'A little kick', image: 'photo-1626700051175-6818013e1d4f', alt: 'A freshly filled chicken wrap' },
+			{ id: 'pesto-pasta', name: 'Pesto sunshine pasta', category: 'Meals', price: 110, description: 'Basil pesto, roasted tomatoes, parmesan.', tag: 'VEGETARIAN', meta: 'V', image: 'photo-1473093295043-cdd812d0e601', alt: 'Pesto pasta topped with tomatoes and herbs' },
+			{ id: 'halloumi-roll', name: 'Hot honey halloumi roll', category: 'Snacks', price: 100, description: 'Griddled halloumi, hot honey, rocket, soft roll.', tag: 'STAFF PICK', meta: 'V · A little kick', image: 'photo-1528735602780-2552fd46c7af', alt: 'Toasted sandwich filled with fresh ingredients' },
+			{ id: 'buddha-bowl', name: 'Rainbow buddha bowl', category: 'Meals', price: 120, description: 'Sticky rice, roast veg, edamame, sesame crunch.', tag: 'PLANT POWER', meta: 'VG · GF', image: 'photo-1511690743698-d9d85f2fbf38', alt: 'A nourishing bowl of rice and colourful vegetables' },
+			{ id: 'soup-toastie', name: 'Soup & cheese toastie', category: 'Meals', price: 80, description: 'Today’s soup with a cheddar & onion toastie.', tag: 'COMFORT FOOD', meta: 'V', image: 'photo-1603105037880-880cd4edfb0d', alt: 'A bowl of freshly made soup' },
+			{ id: 'banana-bread', name: 'Banana bread', category: 'Snacks', price: 35, description: 'Thick-cut, toasted, with a little salted butter.', tag: 'BAKED HERE', meta: 'V', image: 'photo-1601050690597-df0568f70950', alt: 'Freshly baked golden cake' },
+			{ id: 'iced-matcha', name: 'Iced strawberry matcha', category: 'Drinks', price: 80, description: 'Ceremonial matcha, strawberry, oat milk.', tag: 'A LITTLE TREAT', meta: 'VG', image: 'photo-1515823064-d6e0c04616a7', alt: 'A refreshing iced green matcha drink' },
+			{ id: 'lemonade', name: 'Homemade lemonade', category: 'Drinks', price: 30, description: 'Fresh lemons, a squeeze of sunshine, lots of ice.', tag: 'MADE FRESH', meta: 'VG', image: 'photo-1497534446932-c925b458314e', alt: 'A refreshing glass of lemon drink' },
+			{ id: 'khagaria-combo', name: 'Khagaria Quick Combo', category: 'Meals', price: 110, description: 'Crispy chicken wrap with a fresh homemade lemonade.', tag: 'CHEF SPECIAL', meta: 'Combo · Save ₹10', image: 'photo-1626700051175-6818013e1d4f', alt: 'A freshly filled chicken wrap combo' },
+			{ id: 'garden-combo', name: 'Garden Fresh Combo', category: 'Meals', price: 175, description: 'Green goddess bowl paired with iced strawberry matcha.', tag: 'VEGETARIAN COMBO', meta: 'V · Save ₹25', image: 'photo-1512621776951-a57141f2eefd', alt: 'A fresh green bowl combo with vegetables' },
+			{ id: 'campus-break-combo', name: 'Campus Break Combo', category: 'Snacks', price: 60, description: 'Warm banana bread and a chilled homemade lemonade.', tag: 'QUICK BITE', meta: 'Combo · Save ₹5', image: 'photo-1601050690597-df0568f70950', alt: 'Fresh banana bread for a campus snack combo' },
+			{ id: 'veg-burger', name: 'Veg Burger', category: 'Meals', price: 70, description: 'Crispy veg patty, lettuce, tomato, house sauce.', tag: 'CANTEEN CLASSIC', meta: 'V', image: 'photo-1568901346375-23c9450c58cd', alt: 'A freshly prepared vegetable burger' },
+			{ id: 'masala-dosa', name: 'Masala Dosa', category: 'Meals', price: 80, description: 'Golden dosa with spiced potato filling and chutney.', tag: 'SOUTH INDIAN', meta: 'V · GF', image: 'photo-1589301760014-d929f3979dbc', alt: 'Masala dosa served with chutney' },
+			{ id: 'cold-drink', name: 'Cold Drink', category: 'Drinks', price: 25, description: 'Chilled bottled drink, subject to availability.', tag: 'CHILLED', meta: 'Cold', image: 'photo-1544145945-f90425340c7e', alt: 'A cold refreshing drink' },
+			{ id: 'veg-thali', name: 'Veg Thali', category: 'Meals', price: 100, description: 'A satisfying plate of seasonal vegetarian favourites.', tag: 'FILLING FAVOURITE', meta: 'V', image: 'photo-1511690743698-d9d85f2fbf38', alt: 'A full vegetarian meal with rice and vegetables' },
+			{ id: 'samosa', name: 'Crispy Aloo Samosa', category: 'Snacks', cuisine: 'Indian', price: 25, description: 'Spiced potato and peas wrapped in crisp pastry, served with chutney.', tag: 'INDIAN SNACK', meta: 'V · 2 pieces', image: 'photo-1601050690597-df0568f70950', alt: 'Golden crispy Indian samosas' },
+			{ id: 'veg-spring-roll', name: 'Veg Spring Rolls', category: 'Snacks', cuisine: 'Chinese', price: 70, description: 'Crisp rolls filled with seasoned vegetables and served with dip.', tag: 'CHINESE SNACK', meta: 'V · 4 pieces', image: 'photo-1544025162-d76694265947', alt: 'Crispy vegetable spring rolls' },
+			{ id: 'korean-chicken-bites', name: 'Korean Chilli Chicken Bites', category: 'Snacks', cuisine: 'Korean', price: 110, description: 'Crispy chicken bites tossed in a sweet and mildly spicy chilli glaze.', tag: 'KOREAN SNACK', meta: 'A little kick', image: 'photo-1562967914-608f82629710', alt: 'Crispy glazed Korean-style chicken bites' },
+			{ id: 'thai-corn-fritters', name: 'Thai Sweetcorn Fritters', category: 'Snacks', cuisine: 'Thai', price: 65, description: 'Golden sweetcorn fritters with a tangy sweet chilli dip.', tag: 'THAI SNACK', meta: 'V · 4 pieces', image: 'photo-1601050690117-94f5f6fa8bd7', alt: 'Golden sweetcorn fritters with dipping sauce' },
+			{ id: 'medu-vada', name: 'Medu Vada', category: 'Snacks', cuisine: 'South Indian', price: 45, description: 'Crisp lentil fritters served with coconut chutney.', tag: 'SOUTH INDIAN', meta: 'V · 2 pieces', image: 'photo-1630383249896-424e482df921', alt: 'South Indian medu vada served with chutney' },
+			{ id: 'mint-mojito', name: 'Fresh Mint Mojito', category: 'Drinks', price: 50, description: 'Lime, fresh mint, soda, and crushed ice.', tag: 'MADE FRESH', meta: 'VG · Non-alcoholic', image: 'photo-1513558161293-cdaf765edfd7', alt: 'Fresh lime and mint mojito with ice' },
+			{ id: 'cold-coffee', name: 'Iced Cold Coffee', category: 'Drinks', price: 70, description: 'Chilled coffee blended with milk and a touch of sweetness.', tag: 'CHILLED', meta: 'Coffee', image: 'photo-1461023058943-07fcbe16d735', alt: 'Iced cold coffee topped with foam' },
+			{ id: 'cafe-latte', name: 'Cafe Latte', category: 'Drinks', price: 80, description: 'Espresso topped with steamed milk and a light foam.', tag: 'COFFEE BAR', meta: 'Hot · Milk', image: 'photo-1461023058943-07fcbe16d735', alt: 'Hot cafe latte in a ceramic cup' },
+			{ id: 'chocolate-shake', name: 'Chocolate Milkshake', category: 'Drinks', price: 90, description: 'A thick chilled chocolate shake made with milk.', tag: 'A LITTLE TREAT', meta: 'Chilled · Milk', image: 'photo-1572490122747-3968b75cc699', alt: 'Chocolate milkshake topped with chocolate' },
+			{ id: 'virgin-fruit-cocktail', name: 'Virgin Fruit Cocktail', category: 'Drinks', price: 75, description: 'A refreshing non-alcoholic mix of fruit, lime, and soda.', tag: 'ZERO ALCOHOL', meta: 'VG · Non-alcoholic', image: 'photo-1513558161293-cdaf765edfd7', alt: 'Colourful non-alcoholic fruit cocktail' },
+			{ id: 'tomato-soup', name: 'Tomato Soup', category: 'Meals', price: 60, description: 'Warm tomato soup finished with herbs and black pepper.', tag: 'SOUP OF THE DAY', meta: 'V', image: 'photo-1547592180-85f173990554', alt: 'A bowl of warm tomato soup' },
+			{ id: 'sweet-corn-soup', name: 'Sweet Corn Soup', category: 'Meals', price: 70, description: 'A comforting sweetcorn soup with vegetables and herbs.', tag: 'SOUP OF THE DAY', meta: 'V', image: 'photo-1547592180-85f173990554', alt: 'A bowl of sweet corn soup' },
+			{ id: 'veg-chow-mein', name: 'Vegetable Chow Mein', category: 'Meals', cuisine: 'Chinese', price: 85, description: 'Stir-fried noodles with vegetables and a savoury sauce.', tag: 'CHINESE FAVOURITE', meta: 'V', image: 'photo-1617622141675-d3005b9067b5', alt: 'Vegetable chow mein noodles' },
+			{ id: 'veg-hakka-noodles', name: 'Vegetable Hakka Noodles', category: 'Meals', cuisine: 'Chinese', price: 90, description: 'Hakka-style noodles tossed with vegetables and mild seasoning.', tag: 'WOK TOSSED', meta: 'V', image: 'photo-1569718212165-3a8278d5f624', alt: 'A bowl of vegetable Hakka noodles' },
+			{ id: 'veg-manchurian', name: 'Veg Manchurian', category: 'Snacks', cuisine: 'Chinese', price: 100, description: 'Vegetable dumplings tossed in a tangy Indo-Chinese sauce.', tag: 'INDO-CHINESE', meta: 'V · Dry', image: 'photo-1603894584373-5ac82b2ae398', alt: 'Vegetable Manchurian bites' },
+			{ id: 'paneer-chilli', name: 'Paneer Chilli', category: 'Snacks', cuisine: 'Chinese', price: 120, description: 'Paneer, peppers, and onions tossed in chilli sauce.', tag: 'INDO-CHINESE', meta: 'V · A little kick', image: 'photo-1603894584373-5ac82b2ae398', alt: 'Paneer chilli with peppers' },
+			{ id: 'honey-chilli-potato', name: 'Honey Chilli Potato', category: 'Snacks', cuisine: 'Chinese', price: 90, description: 'Crispy potato fingers glazed with honey and chilli.', tag: 'SWEET & SPICY', meta: 'V · A little kick', image: 'photo-1630384060421-cb20d0e0649d', alt: 'Crispy honey chilli potatoes' },
+			{ id: 'baby-corn-masala', name: 'Baby Corn Masala', category: 'Meals', cuisine: 'Indian', price: 110, description: 'Tender baby corn cooked in a spiced tomato masala.', tag: 'INDIAN FAVOURITE', meta: 'V', image: 'photo-1547592180-85f173990554', alt: 'Baby corn masala curry' },
+			{ id: 'masala-papad', name: 'Masala Papad', category: 'Snacks', cuisine: 'Indian', price: 30, description: 'Crisp papad topped with chopped onion, tomato, and spices.', tag: 'QUICK BITE', meta: 'V · 2 pieces', image: 'photo-1601050690597-df0568f70950', alt: 'Crispy masala papad topped with vegetables' },
+			{ id: 'chicken-pakora', name: 'Chicken Pakora', category: 'Snacks', cuisine: 'Indian', price: 110, description: 'Chicken pieces coated in spiced batter and fried crisp.', tag: 'INDIAN SNACK', meta: 'A little kick', image: 'photo-1626082927389-6cd097cdc6ec', alt: 'Crispy chicken pakora pieces' },
+			{ id: 'mushroom-chilli', name: 'Mushroom Chilli', category: 'Snacks', cuisine: 'Chinese', price: 110, description: 'Mushrooms, peppers, and onions tossed in chilli sauce.', tag: 'INDO-CHINESE', meta: 'V · A little kick', image: 'photo-1603894584373-5ac82b2ae398', alt: 'Mushroom chilli with peppers' },
+			{ id: 'veg-momos', name: 'Steamed Veg Momos', category: 'Snacks', price: 80, description: 'Steamed vegetable dumplings served with spicy tomato dip.', tag: 'CANTEEN FAVOURITE', meta: 'V · 6 pieces', image: 'photo-1563245372-f21724e3856d', alt: 'Steamed vegetable momos with dipping sauce' },
+			{ id: 'chicken-roll', name: 'Chicken Roll', category: 'Snacks', cuisine: 'Indian', price: 100, description: 'Spiced chicken wrapped with onions in a soft flatbread.', tag: 'INDIAN STREET FOOD', meta: 'A little kick', image: 'photo-1626700051175-6818013e1d4f', alt: 'A chicken roll wrapped in flatbread' }
+		];
+		const categories = ['Everything', 'Snacks', 'Meals', 'Drinks'];
+		const snackCuisines = ['Indian', 'Chinese', 'Korean', 'Thai', 'Italian', 'South Indian'];
+		const chefSpecialIds = ['khagaria-combo', 'garden-combo', 'campus-break-combo'];
+		const basket = new Map();
+		let activeCategory = 'Everything';
+		let activeSnackCuisine = null;
+		let searchTerm = '';
+		let authMode = 'login';
+		let currentUser = null;
+		let pendingItemId = null;
+		let manualUpiResolve = null;
+		let manualUpiReject = null;
+		const API_BASE = document.querySelector('meta[name="api-base-url"]').content.replace(/\/$/, '');
+		const GOOGLE_CLIENT_ID = document.querySelector('meta[name="google-client-id"]').content.trim();
+		const tokenStorageKey = 'campus-canteen.access-token.v1';
+		let ordersCache = [];
+		let paymentsCache = [];
+		const isCustomerRole = role => role === 'student' || role === 'faculty';
+		const money = amount => `₹${Math.round(amount).toLocaleString('en-IN')}`;
+		const photoUrl = id => `https://images.unsplash.com/${id}?auto=format&fit=crop&w=650&q=80`;
+		const stockControlIds = ['veg-burger', 'masala-dosa', 'cold-drink', 'veg-thali', 'samosa', 'veg-spring-roll', 'korean-chicken-bites', 'thai-corn-fritters', 'medu-vada', 'mint-mojito', 'cold-coffee', 'cafe-latte', 'chocolate-shake', 'virgin-fruit-cocktail', 'tomato-soup', 'sweet-corn-soup', 'veg-chow-mein', 'veg-hakka-noodles', 'veg-manchurian', 'paneer-chilli', 'honey-chilli-potato', 'baby-corn-masala', 'masala-papad', 'chicken-pakora', 'mushroom-chilli', 'veg-momos', 'chicken-roll'];
+		const isAvailable = itemId => menu.find(item => item.id === itemId)?.available !== false;
+		const escapeHtml = value => String(value).replace(/[&<>"']/g, character => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[character]);
+
+		async function apiRequest(path, options = {}) {
+			const headers = new Headers(options.headers || {});
+			headers.set('Content-Type', 'application/json');
+			const token = sessionStorage.getItem(tokenStorageKey);
+			if (token) headers.set('Authorization', `Bearer ${token}`);
+			let response;
+			try {
+				response = await fetch(`${API_BASE}/api${path}`, { ...options, headers });
+			} catch {
+				throw new Error('Cannot reach the canteen service. Check that the backend is running.');
+			}
+			const body = await response.json().catch(() => ({}));
+			if (!response.ok) {
+				const detail = body.detail;
+				throw new Error(Array.isArray(detail) ? detail.map(issue => issue.msg).join(' ') : detail || 'The request could not be completed.');
+			}
+			return body;
+		}
+
+		function renderProfile() {
+			if (!currentUser) return;
+			document.getElementById('profile-name').value = currentUser.name || '';
+			document.getElementById('profile-email').value = currentUser.email || '';
+			document.getElementById('profile-mobile').value = currentUser.mobile || '';
+			document.getElementById('profile-role').textContent = currentUser.role === 'admin' ? 'Canteen staff' : currentUser.role === 'faculty' ? 'Faculty' : 'Student';
+			const photo = document.getElementById('profile-photo-preview');
+			photo.hidden = !currentUser.photoUrl;
+			if (currentUser.photoUrl) photo.src = currentUser.photoUrl;
+			document.getElementById('profile-initials').hidden = Boolean(currentUser.photoUrl);
+			document.getElementById('profile-initials').textContent = (currentUser.name || 'User').trim().split(/\s+/).slice(0, 2).map(part => part[0]).join('').toUpperCase();
+		}
+
+		function showProfilePage() {
+			if (!currentUser) return;
+			if (currentUser.role === 'admin') {
+				document.getElementById('admin-dashboard').hidden = true;
+				document.getElementById('student-dashboard').hidden = false;
+				document.getElementById('customer-nav').hidden = true;
+				document.getElementById('auth-trigger').hidden = true;
+				document.getElementById('customer-logout').hidden = false;
+				document.getElementById('student-user-name').hidden = false;
+				document.getElementById('student-user-name').textContent = currentUser.name;
+				document.getElementById('customer-role-label').textContent = 'Canteen Admin';
+				document.getElementById('admin-home-return').hidden = false;
+			} else {
+				document.getElementById('customer-nav').hidden = false;
+			}
+			setCustomerPage('profile');
+			history.replaceState(null, '', '#profile');
+		}
+
+		async function acceptGoogleCredential(response) {
+			const message = document.getElementById('google-auth-message');
+			message.textContent = '';
+			try {
+				const result = await apiRequest('/auth/google', {
+					method: 'POST',
+					body: JSON.stringify({
+						credential: response.credential,
+						role: document.getElementById('auth-role').value
+					})
+				});
+				openDashboard(result.user, result.access_token);
+				document.getElementById('auth-form').reset();
+			} catch (error) {
+				message.textContent = error.message;
+			}
+		}
+
+		function configureGoogleSignIn() {
+			const fallback = document.getElementById('google-fallback');
+			const message = document.getElementById('google-auth-message');
+			if (!GOOGLE_CLIENT_ID) {
+				fallback.addEventListener('click', () => {
+					message.textContent = 'Set GOOGLE_CLIENT_ID in the backend environment and this page’s google-client-id meta tag to enable Google sign-in.';
+				});
+				return;
+			}
+			const script = document.createElement('script');
+			script.src = 'https://accounts.google.com/gsi/client';
+			script.async = true;
+			script.defer = true;
+			script.onload = () => {
+				if (!window.google?.accounts?.id) {
+					message.textContent = 'Google sign-in could not be loaded. Check your network and OAuth configuration.';
+					return;
+				}
+				window.google.accounts.id.initialize({ client_id: GOOGLE_CLIENT_ID, callback: acceptGoogleCredential });
+				window.google.accounts.id.renderButton(document.getElementById('google-signin-button'), { theme: 'outline', size: 'large', text: 'continue_with', shape: 'rectangular', width: Math.min(320, document.querySelector('.auth-panel').clientWidth - 56) });
+				document.getElementById('google-signin-button').hidden = false;
+				fallback.hidden = true;
+			};
+			script.onerror = () => { message.textContent = 'Google sign-in could not be loaded. Check your network connection.'; };
+			document.head.append(script);
+		}
+
+		function setAuthMode(mode) {
+			authMode = mode;
+			const isSignup = mode === 'signup';
+			document.getElementById('login-tab').setAttribute('aria-selected', String(!isSignup));
+			document.getElementById('signup-tab').setAttribute('aria-selected', String(isSignup));
+			document.getElementById('name-field').hidden = !isSignup;
+			document.getElementById('mobile-field').hidden = !isSignup;
+			document.getElementById('role-field').hidden = !isSignup;
+			document.getElementById('auth-name').required = isSignup;
+			document.getElementById('auth-password').autocomplete = isSignup ? 'new-password' : 'current-password';
+			document.getElementById('auth-password').placeholder = isSignup ? 'Choose at least 8 characters' : 'Your password';
+			document.getElementById('auth-title').textContent = isSignup ? 'Make lunch break yours.' : 'Your campus lunch starts here.';
+			document.getElementById('auth-submit').innerHTML = `${isSignup ? 'Create your account' : 'Log in to your account'} <span aria-hidden="true">→</span>`;
+			document.getElementById('auth-message').textContent = '';
+			document.getElementById('google-auth-message').textContent = '';
+		}
+
+		function setCustomerPage(page) {
+			const isHome = page === 'home';
+			document.getElementById('customer-account').hidden = isHome;
+			document.getElementById('orders-view').hidden = page !== 'orders';
+			document.getElementById('payments-view').hidden = page !== 'payments';
+			document.getElementById('profile-view').hidden = page !== 'profile';
+			document.getElementById('landing-header').hidden = !isHome;
+			document.getElementById('landing-announcement').hidden = !isHome;
+			document.getElementById('top').hidden = !isHome;
+			document.querySelectorAll('[data-customer-page]').forEach(button => {
+				button.setAttribute('aria-selected', String(button.dataset.customerPage === page));
+			});
+			if (page === 'payments') renderPaymentHistory();
+			if (page === 'profile') renderProfile();
+			window.scrollTo(0, 0);
+		}
+
+		function showAdminHomePage() {
+			if (!currentUser || currentUser.role !== 'admin') return;
+			document.getElementById('admin-dashboard').hidden = true;
+			document.getElementById('student-dashboard').hidden = false;
+			document.getElementById('auth-screen').hidden = true;
+			document.getElementById('customer-nav').hidden = true;
+			document.getElementById('auth-trigger').hidden = true;
+			document.getElementById('customer-logout').hidden = false;
+			document.getElementById('student-user-name').hidden = false;
+			document.getElementById('student-user-name').textContent = currentUser.name;
+			document.getElementById('customer-role-label').textContent = 'Canteen Admin';
+			document.getElementById('admin-home-return').hidden = false;
+			renderStudentLiveOrder(null);
+			setCustomerPage('home');
+			history.replaceState(null, '', '#top');
+		}
+
+		function showAdminDashboard() {
+			if (!currentUser || currentUser.role !== 'admin') return;
+			document.getElementById('student-dashboard').hidden = true;
+			document.getElementById('admin-dashboard').hidden = false;
+			document.getElementById('admin-home-return').hidden = true;
+			renderAdminOrders();
+			renderWaitPredictor();
+			window.scrollTo(0, 0);
+			history.replaceState(null, '', '#admin');
+		}
+
+		function openDashboard(user, accessToken = null) {
+			currentUser = user;
+			if (accessToken) sessionStorage.setItem(tokenStorageKey, accessToken);
+			document.getElementById('auth-screen').hidden = true;
+			document.getElementById('student-dashboard').hidden = !isCustomerRole(user.role);
+			document.getElementById('admin-dashboard').hidden = user.role !== 'admin';
+			if (isCustomerRole(user.role)) {
+				document.getElementById('customer-nav').hidden = false;
+				document.getElementById('admin-home-return').hidden = true;
+				document.getElementById('auth-trigger').hidden = true;
+				document.getElementById('customer-logout').hidden = false;
+				document.getElementById('student-user-name').hidden = false;
+				document.getElementById('student-user-name').textContent = user.name;
+				document.getElementById('customer-role-label').textContent = user.role === 'faculty' ? 'Faculty dashboard' : 'Student dashboard';
+				setCustomerPage('home');
+				renderStudentOrders();
+				renderPaymentHistory();
+			} else {
+				document.getElementById('customer-nav').hidden = true;
+				document.getElementById('admin-home-return').hidden = true;
+				document.getElementById('admin-user-name').textContent = user.name;
+				renderAdminOrders();
+			}
+			if (!isCustomerRole(user.role)) pendingItemId = null;
+			if (isCustomerRole(user.role) && pendingItemId) {
+				const itemId = pendingItemId;
+				pendingItemId = null;
+				addToBasket(itemId);
+			}
+			window.scrollTo(0, 0);
+		}
+
+		function showAuth(mode = 'login') {
+			setAuthMode(mode);
+			document.getElementById('auth-screen').hidden = false;
+			window.scrollTo(0, 0);
+		}
+
+		function logout() {
+			currentUser = null;
+			sessionStorage.removeItem(tokenStorageKey);
+			ordersCache = [];
+			paymentsCache = [];
+			basket.clear();
+			renderBasket();
+			document.getElementById('student-dashboard').hidden = false;
+			document.getElementById('admin-dashboard').hidden = true;
+			document.getElementById('auth-screen').hidden = true;
+			document.getElementById('auth-trigger').hidden = false;
+			document.getElementById('customer-logout').hidden = true;
+			document.getElementById('student-user-name').hidden = true;
+			document.getElementById('student-user-name').textContent = '';
+			document.getElementById('customer-role-label').textContent = 'Government Engineering College Khagaria';
+			document.getElementById('customer-nav').hidden = true;
+			document.getElementById('admin-home-return').hidden = true;
+			setCustomerPage('home');
+			document.getElementById('auth-form').reset();
+			setAuthMode('login');
+			window.scrollTo(0, 0);
+		}
+
+		function getOrders() {
+			return ordersCache;
+		}
+
+		function statusLabel(status) {
+			return status === 'Ready' ? 'Ready for Pickup' : status === 'AwaitingPayment' ? 'Awaiting payment' : status;
+		}
+
+		async function renderWaitPredictor() {
+			try {
+				const estimate = await apiRequest('/predict/wait-time');
+				document.getElementById('wait-active-count').textContent = estimate.active_orders;
+				document.getElementById('wait-preparing-count').textContent = estimate.cooking_orders;
+				document.getElementById('wait-average-minutes').textContent = `${estimate.average_prep_minutes} min`;
+				document.getElementById('wait-crowd-text').textContent = estimate.crowd_level;
+				document.getElementById('wait-crowd-level').textContent = `${estimate.crowd_level.toUpperCase()} CROWD`;
+				document.getElementById('wait-crowd-level').dataset.level = estimate.crowd_level;
+				document.getElementById('wait-eta').textContent = `${estimate.estimated_minutes} min`;
+			} catch (error) {
+				document.getElementById('wait-eta').textContent = 'Unavailable';
+				document.getElementById('announcer').textContent = error.message;
+			}
+		}
+
+		function renderStudentLiveOrder(order) {
+			const panel = document.getElementById('student-live-order');
+			if (!order) {
+				panel.hidden = true;
+				return;
+			}
+			panel.hidden = false;
+			const status = order.status === 'AwaitingPayment' ? 'AwaitingPayment' : ['New', 'Cooking', 'Ready', 'Collected'].includes(order.status) ? order.status : 'New';
+			const token = order.token || order.id;
+			const statusIndex = Math.min(['New', 'Cooking', 'Ready', 'Collected'].indexOf(status), 2);
+			document.getElementById('live-order-title').textContent = `Order ${order.id}`;
+			document.getElementById('live-order-token').textContent = String(token).startsWith('#') ? token : `#${token}`;
+			const badge = document.getElementById('live-order-status');
+			badge.textContent = statusLabel(status);
+			badge.dataset.status = status;
+			document.getElementById('order-progress').hidden = status === 'AwaitingPayment';
+			document.getElementById('order-progress').innerHTML = status === 'AwaitingPayment' ? '' : [
+				{ key: 'New', label: 'New', icon: '🟡' },
+				{ key: 'Cooking', label: 'Cooking', icon: '🔵' },
+				{ key: 'Ready', label: 'Ready for Pickup', icon: '🟢' }
+			].map((step, index) => {
+				const complete = status === 'Collected' || index < statusIndex;
+				const current = status !== 'Collected' && index === statusIndex;
+				return `${index ? '<span class="order-progress-arrow" aria-hidden="true">→</span>' : ''}<span class="order-progress-step${complete ? ' is-complete' : ''}${current ? ' is-current' : ''}"${current ? ' aria-current="step"' : ''}><span class="order-step-dot" aria-hidden="true">${step.icon}</span><span>${step.label}</span></span>`;
+			}).join('');
+			document.getElementById('live-order-instruction').textContent = status === 'AwaitingPayment'
+				? order.payment?.status === 'Submitted' ? 'Your UPI reference is submitted. Staff will verify the transfer before sending this order to the kitchen.' : 'Complete the UPI payment from My Order History to send this order to the kitchen.'
+				: status === 'Ready'
+				? 'Your order is ready. Please collect it from the GEC Khagaria Main Desk.'
+				: status === 'Collected'
+					? 'This order has been collected. Thank you!'
+					: 'Please collect your order when the status becomes READY.';
+		}
+
+		async function renderStudentOrders() {
+			if (!currentUser || !isCustomerRole(currentUser.role)) return;
+			document.getElementById('student-order-error').hidden = true;
+			try {
+				ordersCache = (await apiRequest('/orders/me')).orders;
+			} catch (error) {
+				document.getElementById('student-order-list').innerHTML = `<p class="orders-empty">${escapeHtml(error.message)}</p>`;
+				return;
+			}
+			const orders = getOrders().sort((a, b) => b.createdAt - a.createdAt);
+			const readyCount = orders.filter(order => order.status === 'Ready').length;
+			document.getElementById('student-order-summary').textContent = `${orders.length} order${orders.length === 1 ? '' : 's'} · ${readyCount} ready`;
+			renderStudentLiveOrder(orders.find(order => order.status !== 'Collected') || orders[0]);
+			const list = document.getElementById('student-order-list');
+			if (!orders.length) {
+				list.innerHTML = '<p class="orders-empty">No orders yet. Place a preorder below and it will appear here.</p>';
+				return;
+			}
+			list.innerHTML = orders.slice(0, 5).map(order => {
+				const pendingLabel = order.payment?.status === 'Submitted' ? 'UPI reference submitted' : statusLabel(order.status);
+				const retry = order.status === 'AwaitingPayment' ? `<button class="retry-payment-button" type="button" data-retry-payment="${order.token}">${order.payment?.status === 'Submitted' ? 'Open payment details' : 'Continue UPI payment'}</button>` : '';
+				return `<div class="student-order-row"><span class="student-order-main"><strong>${escapeHtml(order.id)} · ${order.items.reduce((sum, item) => sum + item.quantity, 0)} item${order.items.reduce((sum, item) => sum + item.quantity, 0) === 1 ? '' : 's'}</strong><small>Pickup ${escapeHtml(order.pickupTime)} · ${money(order.total)}</small>${retry}</span><span class="status-chip" data-status="${escapeHtml(order.status)}">${escapeHtml(pendingLabel)}</span><small>${new Date(order.createdAt).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })}</small></div>`;
+			}).join('');
+		}
+
+		async function renderPaymentHistory() {
+			if (!currentUser || !isCustomerRole(currentUser.role)) return;
+			try {
+				paymentsCache = (await apiRequest('/payments/me')).payments;
+			} catch (error) {
+				document.getElementById('payment-history-list').innerHTML = `<p class="payment-empty">${escapeHtml(error.message)}</p>`;
+				return;
+			}
+			const payments = paymentsCache;
+			const total = payments.reduce((sum, payment) => sum + Number(payment.amount), 0);
+			document.getElementById('payment-count').textContent = payments.length;
+			document.getElementById('payment-total').textContent = money(total);
+			const list = document.getElementById('payment-history-list');
+			if (!payments.length) {
+				list.innerHTML = '<p class="payment-empty">No completed payments yet. Payments appear here after you collect an order.</p>';
+				return;
+			}
+			list.innerHTML = payments.map(payment => `<article class="payment-row"><div class="payment-order"><strong>Order ${escapeHtml(payment.orderId)}</strong><small>${new Date(payment.paidAt).toLocaleString([], { dateStyle: 'medium', timeStyle: 'short' })} · ${escapeHtml(payment.method)}</small></div><div class="payment-transaction"><small>Transaction ID</small><strong>${escapeHtml(payment.transactionId)}</strong></div><span class="payment-amount">${money(Number(payment.amount))}</span><span class="payment-status">${escapeHtml(payment.status)}</span></article>`).join('');
+		}
+
+		async function renderAdminOrders() {
+			if (!currentUser || currentUser.role !== 'admin') return;
+			document.getElementById('admin-order-error').hidden = true;
+			const filter = document.getElementById('admin-filter').value;
+			let response;
+			try {
+				response = await apiRequest(`/orders?order_filter=${encodeURIComponent(filter)}`);
+			} catch (error) {
+				document.getElementById('admin-order-list').innerHTML = `<div class="admin-empty">${escapeHtml(error.message)}</div>`;
+				return;
+			}
+			const orders = response.orders;
+			ordersCache = orders;
+			const { active: activeCount, ready: readyCount, collected: collectedCount } = response.summary;
+			document.getElementById('admin-active-count').textContent = activeCount;
+			document.getElementById('admin-ready-count').textContent = readyCount;
+			document.getElementById('admin-collected-count').textContent = collectedCount;
+			const visible = orders;
+			const list = document.getElementById('admin-order-list');
+			if (!visible.length) {
+				list.innerHTML = `<div class="admin-empty"><strong>${orders.length ? 'Queue is clear.' : 'No preorders yet.'}</strong>${orders.length ? 'There are no orders in this view.' : 'New student orders will appear here.'}</div>`;
+				return;
+			}
+			list.innerHTML = visible.map(order => {
+				const nextStatus = { New: 'Cooking', Cooking: 'Ready', Ready: 'Collected' }[order.status];
+				const actionLabel = { New: 'Start cooking', Cooking: 'Mark ready', Ready: 'Mark collected' }[order.status];
+				const action = order.status === 'Collected' ? '<span class="status-chip admin-order-done" data-status="Collected">Collected</span>' : order.status === 'AwaitingPayment' && order.payment?.status === 'Submitted' ? `<button class="admin-order-action" type="button" data-confirm-upi="${order.token}" title="Confirm only after checking that the transfer arrived in the canteen account.">Confirm UPI received</button>` : order.status === 'AwaitingPayment' ? '<span class="status-chip" data-status="AwaitingPayment">Awaiting payment</span>' : `<button class="admin-order-action" type="button" data-order-status="${order.token}" data-next-status="${nextStatus}">${actionLabel} →</button>`;
+				const items = order.items.map(item => `${item.quantity} × ${escapeHtml(item.name)}`).join('<br>');
+				const paymentReference = order.payment?.status === 'Submitted' ? `<small>UPI reference: ${escapeHtml(order.payment.transactionId)}</small>` : '';
+				const demoTag = '';
+				return `<article class="admin-order" role="row"><div class="admin-order-token" role="cell"><span>${escapeHtml(order.id)}</span>${demoTag}</div><div class="admin-order-student" role="cell"><div><strong>${escapeHtml(order.customerName)}</strong><small>${escapeHtml(order.customerEmail)}</small></div></div><div class="admin-order-items" role="cell">${items}</div><div class="admin-order-status" role="cell"><span class="status-chip" data-status="${escapeHtml(order.status)}">${order.payment?.status === 'Submitted' ? 'UPI submitted' : escapeHtml(statusLabel(order.status))}</span><small>Pickup ${escapeHtml(order.pickupTime)} · ${money(order.total)}</small>${paymentReference}</div><div class="admin-order-action-cell" role="cell">${action}</div></article>`;
+			}).join('');
+		}
+
+		async function restoreSession() {
+			if (!sessionStorage.getItem(tokenStorageKey)) return;
+			try {
+				const user = await apiRequest('/auth/me');
+				openDashboard(user);
+			} catch {
+				sessionStorage.removeItem(tokenStorageKey);
+			}
+		}
+
+		function renderFilters() {
+			const icons = { Snacks: '🍟', Meals: '🍛', Drinks: '🥤' };
+			document.getElementById('filters').innerHTML = categories.map(category => `<button class="filter${category === activeCategory ? ' active' : ''}" type="button" data-category="${category}" aria-pressed="${category === activeCategory}">${icons[category] ? `${icons[category]} ` : ''}${category}</button>`).join('');
+			const availableCuisines = snackCuisines.filter(cuisine => menu.some(item => item.category === 'Snacks' && item.cuisine === cuisine));
+			if (!availableCuisines.includes(activeSnackCuisine)) activeSnackCuisine = null;
+			document.getElementById('snack-cuisine-filters').hidden = activeCategory !== 'Snacks' || !availableCuisines.length;
+			document.getElementById('snack-cuisine-filters').innerHTML = availableCuisines.map(cuisine => `<button class="filter${cuisine === activeSnackCuisine ? ' active' : ''}" type="button" data-snack-cuisine="${cuisine}" aria-pressed="${cuisine === activeSnackCuisine}">${cuisine}</button>`).join('');
+		}
+
+		function renderStockControls() {
+			document.getElementById('stock-grid').innerHTML = stockControlIds.map(id => {
+				const item = menu.find(entry => entry.id === id);
+				const available = isAvailable(id);
+				return `<label class="stock-row" for="stock-control-${id}"><span class="stock-name">${item.name}</span><span class="stock-state${available ? '' : ' out'}">${available ? '🟢 In Stock' : '🔴 Out of Stock'}</span><input id="stock-control-${id}" type="checkbox" data-stock-toggle="${id}" aria-label="${item.name} availability"${available ? ' checked' : ''}></label>`;
+			}).join('');
+		}
+
+		function renderSpecials() {
+			document.getElementById('combo-grid').innerHTML = chefSpecialIds.map(id => {
+				const item = menu.find(entry => entry.id === id);
+				const available = isAvailable(id);
+				return `<article class="combo-card"><div class="combo-image"><img src="${photoUrl(item.image)}" alt="${item.alt}" loading="lazy"><span class="combo-badge">${available ? item.tag : 'OUT OF STOCK'}</span></div><div class="combo-body"><div class="combo-title-row"><h3>${item.name}</h3><span class="combo-price">${money(item.price)}</span></div><p class="combo-description">${item.description}</p><button class="combo-add" type="button" data-add="${item.id}" aria-label="Add ${item.name} to cart"${available ? '' : ' disabled'}><span>${available ? 'Add to Cart' : 'Out of Stock'}</span><span aria-hidden="true">${available ? '+' : '−'}</span></button></div></article>`;
+			}).join('');
+		}
+
+		function renderMenu() {
+			const filtered = menu.filter(item => !chefSpecialIds.includes(item.id) && (activeCategory === 'Everything' || item.category === activeCategory) && (activeCategory !== 'Snacks' || !activeSnackCuisine || item.cuisine === activeSnackCuisine) && `${item.name} ${item.description} ${item.meta} ${item.cuisine || ''}`.toLowerCase().includes(searchTerm));
+			const grid = document.getElementById('menu-grid');
+			if (!filtered.length) {
+				grid.innerHTML = '<p class="empty-results">Nothing on the menu matches that. Try another search.</p>';
+				return;
+			}
+			grid.innerHTML = filtered.map((item, index) => {
+				const available = isAvailable(item.id);
+				return `<article class="food-card" style="animation-delay:${Math.min(index * 45, 180)}ms">
+				<div class="food-photo"><img src="${photoUrl(item.image)}" alt="${item.alt}" loading="lazy"><span class="food-tag">${available ? item.tag : 'OUT OF STOCK'}</span></div>
+				<div class="food-body"><div class="food-title-row"><h3>${item.name}</h3><span class="food-price">${money(item.price)}</span></div>
+				<p class="food-description">${item.description}</p><div class="food-footer"><span class="food-meta">${available ? item.meta : '🔴 Out of stock'}</span><button class="add-btn" type="button" data-add="${item.id}" aria-label="Add ${item.name} to basket"${available ? '' : ' disabled'}>${available ? '+' : '−'}</button></div></div>
+			</article>`;
+			}).join('');
+		}
+
+		function renderBasket() {
+			const items = [...basket.entries()];
+			const count = items.reduce((sum, [, quantity]) => sum + quantity, 0);
+			const total = items.reduce((sum, [id, quantity]) => sum + menu.find(item => item.id === id).price * quantity, 0);
+			const hasUnavailableItems = items.some(([id]) => !isAvailable(id));
+			document.getElementById('basket-count').textContent = count;
+			document.getElementById('header-count').textContent = count;
+			document.getElementById('basket-total').textContent = money(total);
+			document.getElementById('checkout-btn').disabled = count === 0 || hasUnavailableItems;
+			const paymentMethod = document.querySelector('input[name="payment-method"]:checked').value;
+			document.getElementById('checkout-btn').innerHTML = hasUnavailableItems ? 'Remove unavailable items' : count ? paymentMethod === 'upi' ? 'Continue to UPI payment <span aria-hidden="true">→</span>' : 'Place preorder · Cash <span aria-hidden="true">→</span>' : 'Add something to start <span aria-hidden="true">→</span>';
+			document.getElementById('payment-note').textContent = paymentMethod === 'upi' ? 'Secure checkout · Google Pay and supported UPI apps' : 'Cash due when you collect · Free pickup';
+			document.getElementById('basket-stock-warning').hidden = !hasUnavailableItems;
+			const container = document.getElementById('basket-items');
+			if (!items.length) {
+				container.innerHTML = '<p class="empty-basket">Your basket is looking a little hungry. Add something good from the menu.</p>';
+				return;
+			}
+			container.innerHTML = items.map(([id, quantity]) => {
+				const item = menu.find(entry => entry.id === id);
+				const available = isAvailable(id);
+				return `<div class="basket-line"><span class="basket-line-name">${item.name}${available ? '' : '<small class="stock-state out"> · Out of stock</small>'}</span><span class="basket-line-price">${money(item.price * quantity)}</span><div class="basket-line-controls"><button class="qty-btn" type="button" data-change="${id}" data-delta="-1" aria-label="Remove one ${item.name}">−</button><span class="qty-value" aria-label="Quantity">${quantity}</span><button class="qty-btn" type="button" data-change="${id}" data-delta="1" aria-label="Add one ${item.name}"${available ? '' : ' disabled'}>+</button><button class="line-remove" type="button" data-remove="${id}">Remove</button></div></div>`;
+			}).join('');
+		}
+
+		function addToBasket(id) {
+			if (!menu.some(item => item.id === id)) return;
+			if (!currentUser) {
+				pendingItemId = id;
+				showAuth();
+				return;
+			}
+			if (!isCustomerRole(currentUser.role)) return;
+			if (!isAvailable(id)) {
+				document.getElementById('announcer').textContent = `${menu.find(item => item.id === id).name} is currently out of stock.`;
+				return;
+			}
+			basket.set(id, (basket.get(id) || 0) + 1);
+			renderBasket();
+			document.getElementById('announcer').textContent = `${menu.find(item => item.id === id).name} added to your basket.`;
+		}
+
+		async function loadRazorpayCheckout() {
+			if (window.Razorpay) return;
+			await new Promise((resolve, reject) => {
+				const script = document.createElement('script');
+				script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+				script.onload = resolve;
+				script.onerror = () => reject(new Error('Could not load secure UPI checkout. Check your connection and try again.'));
+				document.head.append(script);
+			});
+		}
+
+		async function launchRazorpayCheckout(checkout) {
+			await loadRazorpayCheckout();
+			return new Promise((resolve, reject) => {
+				let finished = false;
+				const fail = error => {
+					if (finished) return;
+					finished = true;
+					reject(error);
+				};
+				const gateway = new window.Razorpay({
+					key: checkout.key_id,
+					order_id: checkout.order_id,
+					amount: checkout.amount,
+					currency: checkout.currency,
+					name: checkout.name,
+					description: checkout.description,
+					prefill: checkout.prefill,
+					method: { upi: true, card: false, netbanking: false, wallet: false },
+					theme: { color: '#202b22' },
+					modal: { ondismiss: () => fail(new Error('Payment was not completed. Your order is saved as pending; retry it from My Order History.')) },
+					handler: async result => {
+						try {
+							const verifiedOrder = await apiRequest('/payments/verify', {
+								method: 'POST',
+								body: JSON.stringify({
+									razorpay_order_id: result.razorpay_order_id,
+									razorpay_payment_id: result.razorpay_payment_id,
+									razorpay_signature: result.razorpay_signature
+								})
+							});
+							if (!finished) {
+								finished = true;
+								resolve(verifiedOrder);
+							}
+						} catch (error) {
+							fail(error);
+						}
+					}
+				});
+				gateway.on('payment.failed', event => fail(new Error(event.error?.description || 'UPI payment failed. You can retry from My Order History.')));
+				gateway.open();
+			});
+		}
+
+		function launchDirectUpiCheckout(order, checkout) {
+			return new Promise((resolve, reject) => {
+				manualUpiResolve = resolve;
+				manualUpiReject = reject;
+				const dialog = document.getElementById('upi-payment-dialog');
+				dialog.dataset.orderToken = order.token;
+				document.getElementById('upi-payment-title').textContent = `Pay order ${order.id}`;
+				document.getElementById('upi-qr-image').src = checkout.qr_image;
+				document.getElementById('upi-payee-name').textContent = checkout.payee_name;
+				document.getElementById('upi-vpa').textContent = checkout.vpa;
+				document.getElementById('upi-amount').textContent = money(checkout.amount);
+				document.getElementById('upi-order-reference').textContent = checkout.reference;
+				document.getElementById('upi-open-app').href = checkout.upi_uri;
+				document.getElementById('upi-reference-form').reset();
+				document.getElementById('upi-dialog-feedback').textContent = '';
+				dialog.showModal();
+			});
+		}
+
+		async function retryPendingPayment(token) {
+			const error = document.getElementById('student-order-error');
+			error.hidden = true;
+			try {
+				const result = await apiRequest(`/payments/orders/${token}/checkout`, { method: 'POST' });
+				const order = result.razorpay
+					? await launchRazorpayCheckout(result.razorpay)
+					: await launchDirectUpiCheckout(result.order, result.upi);
+				await renderStudentOrders();
+				await renderPaymentHistory();
+				await renderWaitPredictor();
+				showOrderConfirmation(order, 'upi');
+			} catch (paymentError) {
+				error.textContent = paymentError.message;
+				error.hidden = false;
+				await renderStudentOrders();
+			}
+		}
+
+		function showOrderConfirmation(order, paymentMethod) {
+			const quantity = order.items.reduce((sum, item) => sum + item.quantity, 0);
+			const manualReview = paymentMethod === 'upi' && order.payment?.status === 'Submitted';
+			document.getElementById('confirm-kicker').textContent = manualReview ? 'Reference received' : 'Order received';
+			document.getElementById('confirmation-title').textContent = manualReview ? 'Payment is being verified.' : 'Lunch is in motion.';
+			document.getElementById('confirm-message').textContent = manualReview
+				? 'Your order will enter the kitchen after staff confirms the UPI transfer. You can see its status in My Order History.'
+				: 'We’ll have your order ready at the GEC Khagaria Main Desk. Show your order number when you collect.';
+			document.getElementById('confirm-time').textContent = order.pickupTime;
+			document.getElementById('confirm-total').textContent = `${quantity} item${quantity === 1 ? '' : 's'} · ${money(order.total)} · ${manualReview ? 'Awaiting UPI verification' : paymentMethod === 'upi' ? 'Paid by UPI' : 'Pay at pickup'}`;
+			document.getElementById('confirm-number').textContent = order.id;
+			document.getElementById('confirmation').showModal();
+		}
+
+		document.querySelector('.auth-tabs').addEventListener('click', event => {
+			const tab = event.target.closest('[data-mode]');
+			if (tab) setAuthMode(tab.dataset.mode);
+		});
+		document.getElementById('auth-form').addEventListener('submit', async event => {
+			event.preventDefault();
+			const form = event.currentTarget;
+			const email = document.getElementById('auth-email').value.trim().toLowerCase();
+			const password = document.getElementById('auth-password').value;
+			const message = document.getElementById('auth-message');
+			const submit = document.getElementById('auth-submit');
+			submit.disabled = true;
+			message.textContent = '';
+			try {
+				const isSignup = authMode === 'signup';
+				const result = await apiRequest(isSignup ? '/auth/register' : '/auth/login', {
+					method: 'POST',
+					body: JSON.stringify(isSignup ? {
+						name: document.getElementById('auth-name').value.trim(),
+						email,
+						password,
+						role: document.getElementById('auth-role').value,
+						mobile: document.getElementById('auth-mobile').value.trim() || null
+					} : { email, password })
+				});
+				openDashboard(result.user, result.access_token);
+				form.reset();
+			} catch (error) {
+				message.textContent = error instanceof Error ? error.message : 'Could not access your account. Try again.';
+			} finally {
+				submit.disabled = false;
+			}
+		});
+		document.querySelectorAll('[data-logout]').forEach(button => button.addEventListener('click', logout));
+		document.getElementById('auth-trigger').addEventListener('click', () => showAuth());
+		document.getElementById('auth-back').addEventListener('click', () => {
+			document.getElementById('auth-screen').hidden = true;
+			setAuthMode('login');
+		});
+		document.getElementById('admin-filter').addEventListener('change', renderAdminOrders);
+		document.getElementById('stock-grid').addEventListener('change', async event => {
+			const input = event.target.closest('[data-stock-toggle]');
+			if (!input) return;
+			const item = menu.find(entry => entry.id === input.dataset.stockToggle);
+			input.disabled = true;
+			try {
+				const updated = await apiRequest(`/admin/menu/${encodeURIComponent(input.dataset.stockToggle)}/availability`, { method: 'PATCH', body: JSON.stringify({ available: input.checked }) });
+				Object.assign(item, updated);
+				document.getElementById('stock-updated').textContent = `${item.name}: ${updated.available ? 'In Stock' : 'Out of Stock'}.`;
+				renderStockControls();
+				renderSpecials();
+				renderMenu();
+				renderBasket();
+			} catch (error) {
+				input.checked = !input.checked;
+				document.getElementById('stock-updated').textContent = error.message;
+			} finally {
+				input.disabled = false;
+			}
+		});
+		document.getElementById('admin-order-list').addEventListener('click', async event => {
+			const confirmUpi = event.target.closest('[data-confirm-upi]');
+			if (confirmUpi && currentUser?.role === 'admin') {
+				confirmUpi.disabled = true;
+				try {
+					await apiRequest(`/admin/orders/${confirmUpi.dataset.confirmUpi}/confirm-upi`, { method: 'POST' });
+					await renderAdminOrders();
+					await renderWaitPredictor();
+				} catch (error) {
+					document.getElementById('admin-order-error').textContent = error.message;
+					document.getElementById('admin-order-error').hidden = false;
+					confirmUpi.disabled = false;
+				}
+				return;
+			}
+			const button = event.target.closest('[data-order-status]');
+			if (!button || !currentUser || currentUser.role !== 'admin') return;
+			button.disabled = true;
+			try {
+				await apiRequest(`/orders/${button.dataset.orderStatus}/status`, { method: 'PATCH', body: JSON.stringify({ status: button.dataset.nextStatus }) });
+				await renderAdminOrders();
+				await renderWaitPredictor();
+			} catch (error) {
+				document.getElementById('admin-order-error').textContent = error.message;
+				document.getElementById('admin-order-error').hidden = false;
+				button.disabled = false;
+			}
+		});
+		document.getElementById('customer-nav').addEventListener('click', event => {
+			const button = event.target.closest('[data-customer-page]');
+			if (button && currentUser && isCustomerRole(currentUser.role)) setCustomerPage(button.dataset.customerPage);
+		});
+		document.getElementById('student-order-list').addEventListener('click', event => {
+			const button = event.target.closest('[data-retry-payment]');
+			if (button) retryPendingPayment(button.dataset.retryPayment);
+		});
+		document.getElementById('upi-reference-form').addEventListener('submit', async event => {
+			event.preventDefault();
+			if (!manualUpiResolve) return;
+			const submit = document.getElementById('upi-reference-submit');
+			const feedback = document.getElementById('upi-dialog-feedback');
+			submit.disabled = true;
+			feedback.textContent = '';
+			try {
+				const token = document.getElementById('upi-payment-dialog').dataset.orderToken;
+				const order = await apiRequest(`/payments/orders/${token}/reference`, {
+					method: 'POST',
+					body: JSON.stringify({ reference: document.getElementById('upi-reference-input').value })
+				});
+				const resolvePayment = manualUpiResolve;
+				manualUpiResolve = null;
+				manualUpiReject = null;
+				document.getElementById('upi-payment-dialog').close();
+				resolvePayment(order);
+			} catch (error) {
+				feedback.textContent = error.message;
+			} finally {
+				submit.disabled = false;
+			}
+		});
+		document.getElementById('upi-dialog-cancel').addEventListener('click', () => document.getElementById('upi-payment-dialog').close());
+		document.getElementById('upi-payment-dialog').addEventListener('close', () => {
+			if (!manualUpiReject) return;
+			const rejectPayment = manualUpiReject;
+			manualUpiResolve = null;
+			manualUpiReject = null;
+			rejectPayment(new Error('Payment has not been submitted. You can continue from My Order History.'));
+		});
+		document.querySelectorAll('input[name="payment-method"]').forEach(input => input.addEventListener('change', renderBasket));
+		document.getElementById('admin-home-button').addEventListener('click', showAdminHomePage);
+		document.getElementById('admin-home-return').addEventListener('click', showAdminDashboard);
+		document.getElementById('admin-profile-button').addEventListener('click', showProfilePage);
+		document.getElementById('profile-page-tab').addEventListener('click', showProfilePage);
+		document.getElementById('profile-form').addEventListener('submit', async event => {
+			event.preventDefault();
+			const submit = document.getElementById('profile-save');
+			const feedback = document.getElementById('profile-feedback');
+			submit.disabled = true;
+			feedback.textContent = '';
+			try {
+				currentUser = await apiRequest('/profile/me', {
+					method: 'PATCH',
+					body: JSON.stringify({
+						name: document.getElementById('profile-name').value.trim(),
+						mobile: document.getElementById('profile-mobile').value.trim() || null
+					})
+				});
+				document.getElementById('student-user-name').textContent = currentUser.name;
+				document.getElementById('admin-user-name').textContent = currentUser.name;
+				renderProfile();
+				feedback.textContent = 'Profile saved.';
+			} catch (error) {
+				feedback.textContent = error.message;
+			} finally {
+				submit.disabled = false;
+			}
+		});
+		document.getElementById('profile-photo-input').addEventListener('change', async event => {
+			const file = event.currentTarget.files?.[0];
+			if (!file) return;
+			const feedback = document.getElementById('profile-photo-message');
+			if (file.size > 10 * 1024 * 1024) {
+				feedback.textContent = 'Choose an image smaller than 10 MB.';
+				event.currentTarget.value = '';
+				return;
+			}
+			feedback.textContent = 'Uploading photo…';
+			try {
+				const bitmap = await createImageBitmap(file);
+				const edge = 384;
+				const scale = Math.min(1, edge / Math.max(bitmap.width, bitmap.height));
+				const canvas = document.createElement('canvas');
+				canvas.width = Math.max(1, Math.round(bitmap.width * scale));
+				canvas.height = Math.max(1, Math.round(bitmap.height * scale));
+				canvas.getContext('2d').drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+				bitmap.close();
+				let photoUrl = canvas.toDataURL('image/jpeg', 0.82);
+				if (photoUrl.length > 400_000) photoUrl = canvas.toDataURL('image/jpeg', 0.62);
+				currentUser = await apiRequest('/profile/me', { method: 'PATCH', body: JSON.stringify({ photo_url: photoUrl }) });
+				renderProfile();
+				document.getElementById('student-user-name').textContent = currentUser.name;
+				document.getElementById('admin-user-name').textContent = currentUser.name;
+				feedback.textContent = 'Photo updated.';
+			} catch (error) {
+				feedback.textContent = error.message || 'Could not process this image.';
+			} finally {
+				event.currentTarget.value = '';
+			}
+		});
+
+		document.getElementById('filters').addEventListener('click', event => {
+			const button = event.target.closest('[data-category]');
+			if (!button) return;
+			activeCategory = button.dataset.category;
+			activeSnackCuisine = null;
+			renderFilters();
+			renderMenu();
+		});
+		document.getElementById('snack-cuisine-filters').addEventListener('click', event => {
+			const button = event.target.closest('[data-snack-cuisine]');
+			if (!button) return;
+			activeSnackCuisine = button.dataset.snackCuisine;
+			renderFilters();
+			renderMenu();
+		});
+		document.getElementById('search-input').addEventListener('input', event => {
+			searchTerm = event.target.value.trim().toLowerCase();
+			renderMenu();
+		});
+		document.getElementById('menu-grid').addEventListener('click', event => {
+			const button = event.target.closest('[data-add]');
+			if (!button) return;
+			addToBasket(button.dataset.add);
+		});
+		document.getElementById('combo-grid').addEventListener('click', event => {
+			const button = event.target.closest('[data-add]');
+			if (button) addToBasket(button.dataset.add);
+		});
+		document.getElementById('basket-items').addEventListener('click', event => {
+			const change = event.target.closest('[data-change]');
+			const remove = event.target.closest('[data-remove]');
+			if (remove) basket.delete(remove.dataset.remove);
+			if (change) {
+				const id = change.dataset.change;
+				const quantity = (basket.get(id) || 0) + Number(change.dataset.delta);
+				if (quantity <= 0) basket.delete(id); else basket.set(id, quantity);
+			}
+			if (change || remove) {
+				document.getElementById('checkout-error').hidden = true;
+				renderBasket();
+			}
+		});
+		document.getElementById('basket-jump').addEventListener('click', () => {
+			document.getElementById('basket').scrollIntoView({ behavior: 'smooth', block: 'center' });
+		});
+		document.getElementById('checkout-btn').addEventListener('click', async event => {
+			if (!basket.size || !currentUser || !isCustomerRole(currentUser.role)) return;
+			if ([...basket.keys()].some(id => !isAvailable(id))) {
+				renderBasket();
+				return;
+			}
+			const button = event.currentTarget;
+			button.disabled = true;
+			document.getElementById('checkout-error').hidden = true;
+			const paymentMethod = document.querySelector('input[name="payment-method"]:checked').value;
+			try {
+				let order = await apiRequest('/orders', {
+					method: 'POST',
+					body: JSON.stringify({
+						items: [...basket.entries()].map(([item_id, quantity]) => ({ item_id, quantity })),
+						pickup_time: document.getElementById('pickup-time').value,
+						payment_method: paymentMethod
+					})
+				});
+				if (paymentMethod === 'upi') order = order.razorpay
+					? await launchRazorpayCheckout(order.razorpay)
+					: await launchDirectUpiCheckout(order, order.upi);
+				ordersCache.unshift(order);
+				showOrderConfirmation(order, paymentMethod);
+				basket.clear();
+				renderBasket();
+				await renderStudentOrders();
+				await renderWaitPredictor();
+			} catch (error) {
+				document.getElementById('checkout-error').textContent = error.message;
+				document.getElementById('checkout-error').hidden = false;
+				if (paymentMethod === 'upi') await renderStudentOrders();
+			} finally {
+				button.disabled = false;
+				renderBasket();
+			}
+		});
+		document.getElementById('dialog-close').addEventListener('click', () => document.getElementById('confirmation').close());
+
+		function renderPageData() {
+			renderFilters();
+			renderStockControls();
+			renderSpecials();
+			renderMenu();
+			renderBasket();
+		}
+
+		async function loadMenu() {
+			const result = await apiRequest('/menu');
+			menu = result.items;
+			renderPageData();
+		}
+
+		async function initializePage() {
+			renderPageData();
+			try {
+				await loadMenu();
+			} catch (error) {
+				document.getElementById('announcer').textContent = error.message;
+			}
+			await renderWaitPredictor();
+			await restoreSession();
+		}
+
+		configureGoogleSignIn();
+		initializePage();
+		window.setInterval(async () => {
+			try { await loadMenu(); } catch { /* Keep the last menu if the service is briefly offline. */ }
+			await renderWaitPredictor();
+			if (currentUser?.role === 'admin') await renderAdminOrders();
+			if (isCustomerRole(currentUser?.role)) await renderStudentOrders();
+		}, 20000);
+	</script>
+</body>
+</html>

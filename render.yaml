@@ -1,0 +1,40 @@
+services:
+  - type: web
+    name: gec-khagaria-canteen-api
+    runtime: docker
+    plan: starter
+    dockerfilePath: ./backend/Dockerfile
+    healthCheckPath: /api/health
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: DATABASE_URL
+        fromDatabase:
+          name: gec-khagaria-canteen-db
+          property: connectionString
+      - key: JWT_SECRET_KEY
+        generateValue: true
+      - key: ADMIN_EMAIL
+        sync: false
+      - key: ADMIN_PASSWORD
+        sync: false
+      - key: ALLOWED_ORIGINS
+        sync: false
+      - key: GOOGLE_CLIENT_ID
+        sync: false
+      - key: RAZORPAY_KEY_ID
+        sync: false
+      - key: RAZORPAY_KEY_SECRET
+        sync: false
+      - key: RAZORPAY_WEBHOOK_SECRET
+        sync: false
+      - key: UPI_VPA
+        value: adityaraj123beg@oksbi
+      - key: UPI_PAYEE_NAME
+        value: GEC Khagaria Canteen
+
+databases:
+  - name: gec-khagaria-canteen-db
+    databaseName: canteen
+    user: canteen
+    plan: basic-256mb
